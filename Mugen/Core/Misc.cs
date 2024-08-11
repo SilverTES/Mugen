@@ -4,6 +4,7 @@ using System.Reflection;
 using Newtonsoft.Json.Linq;
 using System.Xml;
 using Mugen.Physics;
+using Mugen.Map2D;
 
 namespace Mugen.Core
 {
@@ -260,6 +261,133 @@ namespace Mugen.Core
     }
 
 
+    public class List2D<T> where T : new()
+    {
+        public int _width { get; private set; }
+        public int _height { get; private set; }
+
+        List<List<T>> _map2D = new List<List<T>>();
+
+        public List2D(int width, int height)
+        {
+            _width = width;
+            _height = height;
+
+            //Console.WriteLine("--- Map2D will resized !");
+            ResizeVecObject2D(_width, _height);
+            //Console.WriteLine("--- Map2D is resized !");
+
+        }
+
+        public List<List<T>> Get2DList()
+        {
+            return _map2D;
+        }
+        public void ResizeVecObject2D(int width, int height)
+        {
+            _width = width;
+            _height = height;
+
+            //resizeVec<OBJECT>(_vecObject2D,_mapW);
+            _map2D.Resize(_width, new List<T>());
+
+            for (int i = 0; i < _map2D.Count; i++)
+            {
+                _map2D[i] = new List<T>();
+            }
+
+            for (int x = 0; x < _width; ++x)
+            {
+                //resizeVecPtr<OBJECT>(_vecObject2D[x], _mapH);
+                _map2D[x].Resize(_height, new T());
+
+                //ListExtra.Resize(_vecObject2D[x], _mapW);
+
+                for (int y = 0; y < _height; ++y)
+                {
+                    _map2D[x][y] = new T();
+                }
+            }
+        }
+        public void KillAll()
+        {
+            for (int x = 0; x < _width; ++x)
+            {
+                for (int y = 0; y < _height; ++y)
+                {
+                    if (null != _map2D[x][y])
+                    {
+                        //std::cout << "delete at : " << x << " , " << y << " address = "<< _vecOject2D[x][y]<<  " \n";
+                        //delete _vecObject2D[x][y];
+                        _map2D[x][y] = default!;
+
+                    }
+                }
+                _map2D[x].Clear();
+            }
+            _map2D.Clear();
+        }
+        public void FillObject2D(T cell)
+        {
+            for (int x = 0; x < _width; ++x)
+            {
+                for (int y = 0; y < _height; ++y)
+                {
+                    Put(x, y, cell);
+                }
+            }
+        }
+        public void FillObject2D<Type>() where Type : T, new()
+        {
+            for (int x = 0; x < _width; ++x)
+            {
+                for (int y = 0; y < _height; ++y)
+                {
+                    Type tile = new Type();
+                    Put(x, y, tile);
+                }
+            }
+        }
+        public bool IsInMap(int x, int y)
+        {
+            if (x < 0 || x > _width - 1 ||
+                y < 0 || y > _height - 1)
+                return false;
+
+            return true;
+        }
+        public bool IsInMap(Point point)
+        {
+            if (point.X < 0 || point.X > _width - 1 ||
+                point.Y < 0 || point.Y > _height - 1)
+                return false;
+
+            return true;
+        }
+        public T? Get(int x, int y)
+        {
+            if (x < 0 || x > _width - 1 ||
+                y < 0 || y > _height - 1)
+                //return default(T);
+                return default(T);
+            else
+                return _map2D[x][y];
+        }
+        public void Put(int x, int y, T cell)
+        {
+            if (x < 0 || x > _width - 1 ||
+                y < 0 || y > _height - 1)
+                return;
+            //if (null != _map2D[x][y])
+            _map2D[x][y] = cell;
+        }
+
+        public override string ToString()
+        {
+            return "[Width=" + _width + ":Height=" + _height + "]";
+        }
+
+    }
     public static class ListExtra
     {
         public static void Resize<T>(this List<T> list, int sz, T c)
