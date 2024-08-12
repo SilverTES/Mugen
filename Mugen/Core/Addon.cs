@@ -112,19 +112,21 @@ namespace Mugen.Core
             private Input.MouseControl _mouse = new();
 
             public bool _isDraggable = false;
-            public bool _onDrag = false;
-            public bool _offDrag = false;
+
+            public bool _onDragged = false;
+            public bool _offDragged = false;
             public bool _isDragged = false;
+
             public bool _isDragByRectNode = true;
-            public bool _isLimitRect = false;
-            public bool IsLimitRect => _isLimitRect;
+            public bool _isRectLimitZoneActive = false;
+            public bool IsLimitRect => _isRectLimitZoneActive;
             float _dragX = 0;
             float _dragY = 0;
             float relX = 0; // parent X
             float relY = 0; // parent Y
 
-            public RectangleF _dragRect { get; private set; }
-            public RectangleF _limitRect = new RectangleF();
+            public RectangleF _rectDraggable { get; private set; }
+            public RectangleF _rectLimitZone = new RectangleF();
 
             public Draggable(Node node, Input.MouseControl mouse) : base(node)
             {
@@ -133,7 +135,6 @@ namespace Mugen.Core
 
             public Node? _containerNode { get; private set; }
 
-            //Node _nodeLimitRect;
             public Node? SetDraggable(bool isDraggable)
             {
                 _isDraggable = isDraggable;
@@ -141,32 +142,32 @@ namespace Mugen.Core
             }
             public Node? SetLimitRect(bool isLimitRect)
             {
-                _isLimitRect = isLimitRect;
+                _isRectLimitZoneActive = isLimitRect;
                 return _node;
             }
             public Node? SetLimitRect(RectangleF limitRect)
             {
-                _isLimitRect = true;
-                _limitRect = limitRect.CloneSize();
+                _isRectLimitZoneActive = true;
+                _rectLimitZone = limitRect.CloneSize();
                 return _node;
             }
             public Node? SetLimitRect(Node containerNode)
             {
                 if (null != containerNode)
                 {
-                    _isLimitRect = true;
+                    _isRectLimitZoneActive = true;
                     _containerNode = containerNode;
-                    _limitRect = _containerNode._rect.CloneSize();
+                    _rectLimitZone = _containerNode._rect.CloneSize();
                 }
                 return _node;
             }
             public RectangleF DragRect()
             {
-                return _dragRect;
+                return _rectDraggable;
             }
             public Node? SetDragRect(RectangleF dragRect)
             {
-                _dragRect = dragRect;
+                _rectDraggable = dragRect;
 
                 return _node;
             }
@@ -176,20 +177,15 @@ namespace Mugen.Core
 
                 return _node;
             }
-            //public Draggable SetLimitRect(Node nodeLimitRect)
-            //{
-            //    _nodeLimitRect = nodeLimitRect;
-            //    return this;
-            //}
             public override void Update(GameTime gameTime)
             {
-                _onDrag = false;
-                _offDrag = false;
+                _onDragged = false;
+                _offDragged = false;
 
                 if (_isDragByRectNode)
                 {
                     _node!.UpdateRect();
-                    _dragRect = _node.AbsRect;
+                    _rectDraggable = _node.AbsRect;
 
                 }
 
@@ -200,9 +196,6 @@ namespace Mugen.Core
                 {
                     relX = _node._parent.AbsX;
                     relY = _node._parent.AbsY;
-
-                    //RectangleF relLimitRect = new RectangleF(_limitRect.X + relX, _limitRect.Y + relY, _limitRect.Width, _limitRect.Height);
-                    //_limitRect = relLimitRect;
                 }
 
                 if (null != _containerNode) // Update Rect of container if exist
@@ -210,96 +203,92 @@ namespace Mugen.Core
                     relX = _containerNode.AbsX;
                     relY = _containerNode.AbsY;
 
-                    //_limitRect = Gfx.CloneRelRectF(_containerNode._rect);
-                    //_containerNode.UpdateRect();
-                    //_limitRect = _containerNode.AbsRect;
-
                 }
 
                 _node.UpdateRect();
 
                 if (null != _mouse && _isDraggable)
                 {
-                    _node._navi._isMouseOver = Collision2D.PointInRect(new Vector2(_mouse._x, _mouse._y), _dragRect);
+                    _node._navi._isMouseOver = Collision2D.PointInRect(new Vector2(_mouse._x, _mouse._y), _rectDraggable);
 
                     if (_node._navi._isMouseOver)
                     {
-                        //Console.Write("< isOverDraggable >");
                         _mouse._isOverAny = true;
                     }
 
-                    if (_mouse._isMove && _isDragged && _node._navi._isFocus)
+                    if (_mouse._onClick)
+                    {
+                        if (_node._navi._isMouseOver)
+                        {
+                            if (!_isDragged && (_mouse._button == 1 && !_mouse._isActiveDrag && !_mouse._isActiveReSize))
+                            {
+                                if (!_mouse._isActiveDrag)
+                                {
+                                    _onDragged = true;
+                                    _isDragged = true;
+                                    _mouse._isActiveDrag = true;
+                                    _node._navi._onClick = true;
+                                }
+                            }
+                        }
+                    }
+                    
+                    if (_mouse._offClick)
+                    {
+                        if (_isDragged)
+                        {
+                            _isDragged = false;
+                            _offDragged = true;
+                        }
+                    }
+
+                    if (_isDragged && _mouse._isMove && _node._navi._isFocus)
                     {
                         _node._x = _mouse._x - _dragX;
                         _node._y = _mouse._y - _dragY;
                     }
 
-                    if (_mouse._down)
-                    {
-
-                        if (_node._navi._isMouseOver)
-                        {
-                            if (_isDragged) _node._navi._isFocus = true;
-
-                            if (!_isDragged && (_mouse._button == 1 && !_mouse._isActiveDrag && !_mouse._isActiveReSize))
-                            {
-                                if (!_mouse._isActiveDrag)
-                                {
-                                    _onDrag = true;
-                                    _isDragged = true;
-                                    _mouse._isActiveDrag = true;
-
-                                    _node._navi._onClick = true;
-                                }
-                                //log(0,"< Draggable is On >");
-                            }
-                        }
-                    }
-                    else
-                    {
-                        if (_isDragged)
-                        {
-                            _isDragged = false;
-                            _offDrag = true;
-                        }
-                    }
-
 
                     if (_isDragged)
                     {
+                        _node._navi._isFocus = true;
+
                         _dragX = _mouse._x - _node._x;
                         _dragY = _mouse._y - _node._y;
 
                         _node.UpdateRect();
                     }
+
+
+
                 }
 
-                if (_isLimitRect)
+                if (_isRectLimitZoneActive)
                 {
-                    if (_node._rect.X < _limitRect.X)
+                    if (_node._rect.X < _rectLimitZone.X)
                     {
-                        _node._x = _limitRect.X + _node._oX;
+                        _node._x = _rectLimitZone.X + _node._oX;
                         //_mouse->_x = _rect.x + _dragX;
                         _node.UpdateRect();
                         //std::cout << "< Out of LimitRect LEFT >";
                     }
-                    if (_node._rect.Y < _limitRect.Y)
+                    if (_node._rect.Y < _rectLimitZone.Y)
                     {
-                        _node._y = _limitRect.Y + _node._oY;
+                        _node._y = _rectLimitZone.Y + _node._oY;
                         //_mouse->_y = _rect.y + _dragY;
                         _node.UpdateRect();
                         //std::cout << "< Out of LimitRect TOP >";
                     }
-                    if (_node._rect.X > _limitRect.Width - _node._rect.Width)
+                    if (_node._rect.X > _rectLimitZone.Width - _node._rect.Width)
                     {
-                        _node._x = _limitRect.Width - _node._rect.Width + _node._oX;
+                        _node._x = _rectLimitZone.Width - _node._rect.Width + _node._oX;
                         //_mouse->_x = _rect.x + _dragX;
                         _node.UpdateRect();
                         //std::cout << "< Out of LimitRect RIGHT >";
                     }
-                    if (_node._rect.Y > _limitRect.Height - _node._rect.Height)
+                    if (_node._rect.Y > _rectLimitZone.Height - _node._rect.Height)
                     {
-                        _node._y = _limitRect.Height - _node._rect.Height + _node._oY;
+                        _node._y = _rectLimitZone.Height - _node._rect.Height + _node._oY;
                         //_mouse->_y = _rect.y + _dragY;
                         _node.UpdateRect();
                         //std::cout << "< Out of LimitRect BOTTOM >";
@@ -308,11 +297,11 @@ namespace Mugen.Core
             }
             public void Draw(SpriteBatch batch)
             {
-                RectangleF rect = _limitRect;
+                RectangleF rect = _rectLimitZone;
                 rect.Offset(relX, relY);
                 //batch.DrawRectangle(_limitRect, Color.Red, 1);
                 GFX.GFX.Rectangle(batch, rect, Color.Red, 1);
-                GFX.GFX.Rectangle(batch, _dragRect, Color.YellowGreen, 1);
+                GFX.GFX.Rectangle(batch, _rectDraggable, Color.YellowGreen, 1);
             }
 
         }

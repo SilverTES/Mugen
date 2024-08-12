@@ -1257,8 +1257,8 @@ namespace Mugen.GUI
 
                 }
 
-                if (_cursor._drag._onDrag) PostMessage("ON_DRAG_CURSOR");
-                if (_cursor._drag._offDrag) PostMessage("OFF_DRAG_CURSOR");
+                if (_cursor._drag._onDragged) PostMessage("ON_DRAG_CURSOR");
+                if (_cursor._drag._offDragged) PostMessage("OFF_DRAG_CURSOR");
 
                 Value = _cursor._x / _maxValue;
 
