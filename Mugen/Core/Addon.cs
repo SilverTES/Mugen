@@ -216,6 +216,13 @@ namespace Mugen.Core
                         _mouse._isOverAny = true;
                     }
 
+                    if (_isDragged && _mouse._isMove && _node._navi._isFocus)
+                    {
+                        _node._x = _mouse._x - _dragX;
+                        _node._y = _mouse._y - _dragY;
+                    }
+
+
                     if (_mouse._onClick)
                     {
                         if (_node._navi._isMouseOver)
@@ -241,13 +248,6 @@ namespace Mugen.Core
                             _offDragged = true;
                         }
                     }
-
-                    if (_isDragged && _mouse._isMove && _node._navi._isFocus)
-                    {
-                        _node._x = _mouse._x - _dragX;
-                        _node._y = _mouse._y - _dragY;
-                    }
-
 
                     if (_isDragged)
                     {
