@@ -1,10 +1,6 @@
 ﻿using Mugen.Core;
 using Mugen.Physics;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+
 
 namespace Mugen.GUI
 {

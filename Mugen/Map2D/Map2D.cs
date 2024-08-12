@@ -1,10 +1,6 @@
 ﻿using Microsoft.Xna.Framework;
 using Mugen.Core;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+
 
 namespace Mugen.Map2D
 {

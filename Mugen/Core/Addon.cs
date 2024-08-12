@@ -1,7 +1,6 @@
 ﻿using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using Mugen.Animation;
-using Mugen.GFX;
 using Mugen.Physics;
 
 namespace Mugen.Core

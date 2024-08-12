@@ -15,7 +15,7 @@ namespace Mugen.Core
 
         private Vector2 Mouse = new();
 
-        public bool IsFullScreen { get; private set; } = false;
+        public bool IsFullscreen { get; private set; } = false;
 
         readonly int _gameScreenW;
         readonly int _gameScreenH;
@@ -65,9 +65,9 @@ namespace Mugen.Core
         }
         public void ToggleFullscreen()
         {
-            IsFullScreen = !IsFullScreen;
+            IsFullscreen = !IsFullscreen;
 
-            if (IsFullScreen)
+            if (IsFullscreen)
             {
                 _windowW = _game.Window.ClientBounds.Width;
                 _windowH = _game.Window.ClientBounds.Height;
