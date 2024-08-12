@@ -4,7 +4,6 @@ using System.Reflection;
 using Newtonsoft.Json.Linq;
 using System.Xml;
 using Mugen.Physics;
-using Mugen.Map2D;
 
 namespace Mugen.Core
 {
