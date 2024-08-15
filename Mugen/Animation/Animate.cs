@@ -1,4 +1,5 @@
 ﻿using Microsoft.Xna.Framework;
+using System.Security.Cryptography;
 
 namespace Mugen.Animation
 {
@@ -10,12 +11,21 @@ namespace Mugen.Animation
 
         public Func<float, float, float, float, float> _easing;
 
-        public Motion(string name, Func<float, float, float, float, float> easing, float start, float end, float duration)
+        public Motion(string name)
+        {
+            _name = name;
+            _easing = Easing.Linear;
+            _tweening._start = 0f;
+            _tweening._goal = 1f;
+            _tweening._duration = 1f;
+        }
+
+        public Motion(string name, Func<float, float, float, float, float> easing, float start = 0f, float end = 1f, float duration = 1f)
         {
             _name = name;
             _easing = easing;
             _tweening._start = start;
-            _tweening._end = end;
+            _tweening._goal = end;
             _tweening._duration = duration;
         }
 
@@ -30,12 +40,21 @@ namespace Mugen.Animation
 
         public Func<float, float, float, float, float> _easing;
 
+        public MotionVec2(string name)
+        {
+            _name = name;
+            _easing = Easing.Linear;
+            _tweening._start = Vector2.Zero;
+            _tweening._goal = Vector2.One;
+            _tweening._duration = 1f;
+        }
+
         public MotionVec2(string name, Func<float, float, float, float, float> easing, Vector2 start, Vector2 end, float duration)
         {
             _name = name;
             _easing = easing;
             _tweening._start = start;
-            _tweening._end = end;
+            _tweening._goal = end;
             _tweening._duration = duration;
         }
 
@@ -58,13 +77,31 @@ namespace Mugen.Animation
         {
             return _motions;
         }
+        public void SetMotion(string name, Func<float, float, float, float, float> easing, float start, float goal, float duration)
+        {
+            if (_motions.ContainsKey(name))
+            {
+                _motions[name] = new Motion(name, easing, start, goal, duration);
+            }
+        }
+        public void SetMotion(string name, Func<float, float, float, float, float> easing, Tweening tweening)
+        {
+            if (_motions.ContainsKey(name))
+            {
+                _motions[name] = new Motion(name, easing, tweening._start, tweening._goal, tweening._duration);
+            }
+        }
+        public void Add(string name)
+        {
+            _motions.Add(name, new Motion(name));
+        }
         public void Add(string name, Func<float, float, float, float, float> easing, float start, float goal, float duration)
         {
             _motions.Add(name, new Motion(name, easing, start, goal, duration));
         }
         public void Add(string name, Func<float, float, float, float, float> easing, Tweening tweening)
         {
-            _motions.Add(name, new Motion(name, easing, tweening._start, tweening._end, tweening._duration));
+            _motions.Add(name, new Motion(name, easing, tweening._start, tweening._goal, tweening._duration));
         }
         public Motion Of(string name)
         {
@@ -162,13 +199,31 @@ namespace Mugen.Animation
         {
             return _motions;
         }
+        public void SetMotionVec2(string name, Func<float, float, float, float, float> easing, Vector2 start, Vector2 goal, float duration)
+        {
+            if (_motions.ContainsKey(name))
+            {
+                _motions[name] = new MotionVec2(name, easing, start, goal, duration);
+            }
+        }
+        public void SetMotionVec2(string name, Func<float, float, float, float, float> easing, TweeningVec2 tweening)
+        {
+            if (_motions.ContainsKey(name))
+            {
+                _motions[name] = new MotionVec2(name, easing, tweening._start, tweening._goal, tweening._duration);
+            }
+        }
+        public void Add(string name)
+        {
+            _motions.Add(name, new MotionVec2(name));
+        }
         public void Add(string name, Func<float, float, float, float, float> easing, Vector2 start, Vector2 goal, float duration)
         {
             _motions.Add(name, new MotionVec2(name, easing, start, goal, duration));
         }
         public void Add(string name, Func<float, float, float, float, float> easing, TweeningVec2 tweening)
         {
-            _motions.Add(name, new MotionVec2(name, easing, tweening._start, tweening._end, tweening._duration));
+            _motions.Add(name, new MotionVec2(name, easing, tweening._start, tweening._goal, tweening._duration));
         }
         public MotionVec2 Of(string name)
         {

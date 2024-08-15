@@ -4,7 +4,7 @@
 namespace Mugen.Input
 {
         // Manage button delay/tempo
-        public class Button
+        public class ButtonControl
         {
             public class State
             {

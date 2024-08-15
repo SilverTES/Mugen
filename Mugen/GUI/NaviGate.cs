@@ -207,7 +207,7 @@ namespace Mugen.GUI
                 if (null != FocusNaviNode()._navi) // check if focused clip have _navi !
                 {
 
-                    FocusNaviNode()._navi._onPress = Input.Button.OnePress("SubmitButton", button);
+                    FocusNaviNode()._navi._onPress = Input.ButtonControl.OnePress("SubmitButton", button);
                     FocusNaviNode()._navi._isPress = button;
 
                     if (FocusNaviNode()._type == UID.Get<Gui.Base>())

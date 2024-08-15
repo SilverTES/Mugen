@@ -1,28 +1,29 @@
 ﻿using Microsoft.Xna.Framework;
+using Mugen.Core;
 
 namespace Mugen.Animation
 {
     public struct Tweening
     {
-        public float _start, _end, _duration;
+        public float _start, _goal, _duration;
 
-        public Tweening(float start, float end, float duration)
+        public Tweening(float start, float goal, float duration)
         {
             _start = start;
-            _end = end;
+            _goal = goal;
             _duration = duration;
         }
     }
 
     public struct TweeningVec2
     {
-        public Vector2 _start, _end;
+        public Vector2 _start, _goal;
         public float _duration;
 
-        public TweeningVec2(Vector2 start, Vector2 end, float duration)
+        public TweeningVec2(Vector2 start, Vector2 goal, float duration)
         {
             _start = start;
-            _end = end;
+            _goal = goal;
             _duration = duration;
         }
     }
@@ -41,18 +42,17 @@ namespace Mugen.Animation
 
         public static float GetValue(Func<float, float, float, float, float> easing, float current, Tweening tweening)
         {
-            return easing(current, tweening._start, tweening._end - tweening._start, tweening._duration);
+            return easing(current, tweening._start, tweening._goal - tweening._start, tweening._duration);
         }
         public static Vector2 GetValue(Func<float, float, float, float, float> easing, float current, TweeningVec2 tweening)
         {
             Vector2 value = new Vector2();
 
-            value.X = easing(current, tweening._start.X, tweening._end.X - tweening._start.X, tweening._duration);
-            value.Y = easing(current, tweening._start.Y, tweening._end.Y - tweening._start.Y, tweening._duration);
+            value.X = easing(current, tweening._start.X, tweening._goal.X - tweening._start.X, tweening._duration);
+            value.Y = easing(current, tweening._start.Y, tweening._goal.Y - tweening._start.Y, tweening._duration);
 
             return value;
         }
-
         public static float Linear(float t, float b, float c, float d)
         {
             return c * (t / d) + b;
