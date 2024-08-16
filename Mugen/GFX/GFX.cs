@@ -719,9 +719,21 @@ namespace Mugen.GFX
             spriteBatch.Draw(_whitePixel, position, color);
         }
 
-        public static void Bar(SpriteBatch batch, float x, float y, float value, float height, Color color)
+        public static void Bar(SpriteBatch spriteBatch, float x, float y, float value, float height, Color color)
         {
-            Line(batch, x, y, x + value, y, color, height);
+            Line(spriteBatch, x, y, x + value, y, color, height);
+        }
+        public static void Bar(SpriteBatch spriteBatch, Vector2 position, float value, float height, Color color)
+        {
+            Line(spriteBatch, position.X, position.Y, position.X + value, position.Y, color, height);
+        }
+        public static void BarLines(SpriteBatch spriteBatch, Vector2 position, float value, float height, Color color, float thickness = 1f)
+        {
+            float h = height / 2;
+            Line(spriteBatch, position.X, position.Y - h, position.X + value, position.Y - h, color, thickness);
+            Line(spriteBatch, position.X, position.Y + h, position.X + value, position.Y + h, color, thickness);
+            Line(spriteBatch, position.X + value, position.Y - h, position.X + value, position.Y + h, color, thickness);
+            Line(spriteBatch, position.X, position.Y - h, position.X, position.Y + h, color, thickness);
         }
         public static void Triangle(SpriteBatch batch, float x1, float y1, float x2, float y2, float x3, float y3, Color color, float size = 1)
         {
