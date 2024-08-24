@@ -567,15 +567,17 @@ namespace Mugen.GFX
             Ellipse(batch, pos.X, pos.Y, radius.X, radius.Y, side, color, size);
         }
 
-        public static void FillRectangle(SpriteBatch batch, Rectangle rect, Color color)
+        public static Rectangle FillRectangle(SpriteBatch batch, Rectangle rect, Color color)
         {
             batch.Draw(_whitePixel, rect, color);
+            return rect;
         }
-        public static void FillRectangle(SpriteBatch batch, RectangleF rect, Color color)
+        public static RectangleF FillRectangle(SpriteBatch batch, RectangleF rect, Color color)
         {
             batch.Draw(_whitePixel, new Rectangle((int)rect.X, (int)rect.Y, (int)rect.Width, (int)rect.Height), color);
+            return rect;
         }
-        public static void FillRectangle(SpriteBatch spriteBatch, Vector2 location, Vector2 size, Color color, float angle)
+        public static RectangleF FillRectangle(SpriteBatch spriteBatch, Vector2 location, Vector2 size, Color color, float angle)
         {
             spriteBatch.Draw(_whitePixel,
                              location,
@@ -586,8 +588,10 @@ namespace Mugen.GFX
                              size,
                              SpriteEffects.None,
                              0);
+
+            return new RectangleF(location.X, location.Y, size.X, size.Y);
         }
-        public static void FillRectangleCentered(SpriteBatch spriteBatch, Vector2 location, Vector2 size, Color color, float angle)
+        public static RectangleF FillRectangleCentered(SpriteBatch spriteBatch, Vector2 location, Vector2 size, Color color, float angle)
         {
             spriteBatch.Draw(_whitePixel,
                              location,
@@ -598,19 +602,21 @@ namespace Mugen.GFX
                              size,
                              SpriteEffects.None,
                              0);
+
+            return new RectangleF(location.X - size.X/2, location.Y - size.Y/2, size.X, size.Y);
         }
-        public static void FillRectangle(SpriteBatch spriteBatch, Vector2 location, Vector2 size, Color color)
+        public static RectangleF FillRectangle(SpriteBatch spriteBatch, Vector2 location, Vector2 size, Color color)
         {
-            FillRectangle(spriteBatch, location, size, color, 0.0f);
+            return FillRectangle(spriteBatch, location, size, color, 0.0f);
         }
-        public static void FillRectangle(SpriteBatch spriteBatch, float x, float y, float w, float h, Color color)
+        public static RectangleF FillRectangle(SpriteBatch spriteBatch, float x, float y, float w, float h, Color color)
         {
-            FillRectangle(spriteBatch, new Vector2(x, y), new Vector2(w, h), color, 0.0f);
+            return FillRectangle(spriteBatch, new Vector2(x, y), new Vector2(w, h), color, 0.0f);
         }
 
-        public static void FillSquare(SpriteBatch spriteBatch, Vector2 location, float size, Color color)
+        public static RectangleF FillSquare(SpriteBatch spriteBatch, Vector2 location, float size, Color color)
         {
-            FillRectangleCentered(spriteBatch, location, new Vector2(size), color, 0.0f);
+            return FillRectangleCentered(spriteBatch, location, new Vector2(size), color, 0.0f);
         }
 
         public static void Point(SpriteBatch spriteBatch, Vector2 location, float size, Color color)
@@ -646,7 +652,7 @@ namespace Mugen.GFX
             return shape._vertexsFinal;
 
         }
-        public static void Rectangle(SpriteBatch spriteBatch, RectangleF rect, Color color, float thickness = 1f)
+        public static RectangleF  Rectangle(SpriteBatch spriteBatch, RectangleF rect, Color color, float thickness = 1f)
         {
             // TODO: Figure out the pattern for the offsets required and then handle it in the line instead of here
             float offset = thickness / 2;
@@ -656,22 +662,26 @@ namespace Mugen.GFX
             Line(spriteBatch, new Vector2(rect.X - offset, rect.Bottom), new Vector2(rect.Right + offset, rect.Bottom), color, thickness); // bottom
             Line(spriteBatch, new Vector2(rect.X, rect.Y - offset), new Vector2(rect.X, rect.Bottom + offset), color, thickness); // left
             Line(spriteBatch, new Vector2(rect.Right, rect.Y - offset), new Vector2(rect.Right, rect.Bottom + offset), color, thickness); // right
+
+            return rect;
         }
-        public static void RectangleI(SpriteBatch spriteBatch, Rectangle rect, Color color, float thickness = 1f)
+        public static RectangleF RectangleI(SpriteBatch spriteBatch, Rectangle rect, Color color, float thickness = 1f)
         {
+            return Rectangle(spriteBatch, rect, color, thickness);
+        }
+        public static RectangleF Rectangle(SpriteBatch spriteBatch, float x, float y, float width, float height, Color color, float thickness = 1f)
+        {
+            return Rectangle(spriteBatch, new RectangleF(x, y, width, height), color, thickness);
+        }
+        public static RectangleF Rectangle(SpriteBatch spriteBatch, Vector2 location, Vector2 size, Color color, float thickness = 1f)
+        {
+            return Rectangle(spriteBatch, new RectangleF((int)location.X, (int)location.Y, (int)size.X, (int)size.Y), color, thickness);
+        }
+        public static RectangleF RectangleCentered(SpriteBatch spriteBatch, Vector2 location, Vector2 size, Color color, float thickness = 1f)
+        {
+            RectangleF rect = new RectangleF((int)location.X - size.X / 2, (int)location.Y - size.Y / 2, (int)size.X, (int)size.Y);
             Rectangle(spriteBatch, rect, color, thickness);
-        }
-        public static void Rectangle(SpriteBatch spriteBatch, float x, float y, float width, float height, Color color, float thickness = 1f)
-        {
-            Rectangle(spriteBatch, new RectangleF(x, y, width, height), color, thickness);
-        }
-        public static void Rectangle(SpriteBatch spriteBatch, Vector2 location, Vector2 size, Color color, float thickness = 1f)
-        {
-            Rectangle(spriteBatch, new RectangleF((int)location.X, (int)location.Y, (int)size.X, (int)size.Y), color, thickness);
-        }
-        public static void RectangleCentered(SpriteBatch spriteBatch, Vector2 location, Vector2 size, Color color, float thickness = 1f)
-        {
-            Rectangle(spriteBatch, new RectangleF((int)location.X - size.X / 2, (int)location.Y - size.Y / 2, (int)size.X, (int)size.Y), color, thickness);
+            return rect;
         }
         public static void Circle(SpriteBatch spriteBatch, Vector2 center, float radius, int sides, Color color, float thickness = 1f)
         {
@@ -687,7 +697,7 @@ namespace Mugen.GFX
             //List<Vector2> arc = CreateArc2(radius, sides, startingAngle, degrees);
             Points(spriteBatch, center, arc, color, thickness);
         }
-        public static void RoundedRectangle(SpriteBatch spriteBatch, RectangleF rect, float radius, int sides, Color color, float thickness = 1f)
+        public static RectangleF RoundedRectangle(SpriteBatch spriteBatch, RectangleF rect, float radius, int sides, Color color, float thickness = 1f)
         {
             Arc(spriteBatch, rect.TopLeft + Vector2.One * radius, radius, sides, Geo.RAD_180, Geo.RAD_90, color, thickness);
             Line(spriteBatch, rect.TopLeft + Vector2.UnitX * radius, rect.TopRight - Vector2.UnitX * radius, color, thickness);
@@ -697,8 +707,10 @@ namespace Mugen.GFX
             Line(spriteBatch, rect.BottomLeft + Vector2.UnitX * radius, rect.BottomRight - Vector2.UnitX * radius, color, thickness);
             Arc(spriteBatch, rect.BottomRight - Vector2.One * radius, radius, sides, -Geo.RAD_90, Geo.RAD_90, color, thickness);
             Line(spriteBatch, rect.TopLeft + Vector2.UnitY * radius, rect.BottomLeft - Vector2.UnitY * radius, color, thickness);
+
+            return rect;
         }
-        public static void BevelledRectangle(SpriteBatch spriteBatch, RectangleF rect, Vector2 bevel, Color color, float thickness = 1f)
+        public static RectangleF BevelledRectangle(SpriteBatch spriteBatch, RectangleF rect, Vector2 bevel, Color color, float thickness = 1f)
         {
             Line(spriteBatch, rect.TopLeft + Vector2.UnitY * bevel.Y, rect.TopLeft + Vector2.UnitX * bevel.X, color, thickness);
             Line(spriteBatch, rect.TopLeft + Vector2.UnitX * bevel.X, rect.TopRight - Vector2.UnitX * bevel.X, color, thickness);
@@ -708,6 +720,8 @@ namespace Mugen.GFX
             Line(spriteBatch, rect.BottomLeft + Vector2.UnitX * bevel.X, rect.BottomRight - Vector2.UnitX * bevel.X, color, thickness);
             Line(spriteBatch, rect.BottomLeft + Vector2.UnitX * bevel.X, rect.BottomLeft - Vector2.UnitY * bevel.Y, color, thickness);
             Line(spriteBatch, rect.TopLeft + Vector2.UnitY * bevel.Y, rect.BottomLeft - Vector2.UnitY * bevel.Y, color, thickness);
+
+            return rect;
         }
 
         public static void PutPixel(SpriteBatch spriteBatch, float x, float y, Color color)
