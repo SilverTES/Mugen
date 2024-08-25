@@ -4,6 +4,7 @@ using System.Reflection;
 using Newtonsoft.Json.Linq;
 using System.Xml;
 using Mugen.Physics;
+using System.Runtime.CompilerServices;
 
 namespace Mugen.Core
 {
@@ -170,12 +171,20 @@ namespace Mugen.Core
 
         public static Random Rng = new Random();
 
-        static public int Log(string message, int error = 0)
+//        static public int Log(string message, int error = 0)
+//        {
+//#if DEBUG_ON
+//                System.Console.Write(message);
+//#endif
+//            return error;
+//        }
+
+        public static void Log(string message, [CallerLineNumber] int lineNumber = 0, [CallerMemberName] string? caller = null, [CallerFilePath] string? filePath = null)
         {
-#if DEBUG_ON
-                System.Console.Write(message);
-#endif
-            return error;
+            string? fileName = filePath?.Split(@"\").Last();
+            string name = fileName!.Split(".").First();
+
+            Console.WriteLine($"{lineNumber} {name}.{caller}() : {message}");  
         }
 
         // Point in Range, Rect, Circle

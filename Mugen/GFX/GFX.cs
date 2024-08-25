@@ -652,7 +652,7 @@ namespace Mugen.GFX
             return shape._vertexsFinal;
 
         }
-        public static RectangleF  Rectangle(SpriteBatch spriteBatch, RectangleF rect, Color color, float thickness = 1f)
+        public static RectangleF Rectangle(SpriteBatch spriteBatch, RectangleF rect, Color color, float thickness = 1f)
         {
             // TODO: Figure out the pattern for the offsets required and then handle it in the line instead of here
             float offset = thickness / 2;

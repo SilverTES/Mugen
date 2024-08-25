@@ -335,6 +335,14 @@ namespace Mugen.Physics
         {
             return Translate(this, offset);
         }
+        public static RectangleF GetRectangleCentered(Vector2 location, Vector2 size)
+        {
+            return new RectangleF(location.X - size.X / 2, location.Y - size.Y / 2, size.X, size.Y);
+        }
+        public static RectangleF GetRectangleByPivot(Vector2 location, Vector2 size, Vector2 pivot)
+        {
+            return new RectangleF(location.X - pivot.X, location.Y - pivot.Y, size.X, size.Y);
+        }
     }
 
     public struct CircleF

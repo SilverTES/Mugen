@@ -6,6 +6,8 @@ using RectangleF = Mugen.Physics.RectangleF;
 using Rectangle = Microsoft.Xna.Framework.Rectangle;
 using Mugen.GUI;
 using Mugen.Event;
+using System;
+using System.Reflection;
 
 namespace Mugen.Core
 {
@@ -1052,52 +1054,47 @@ namespace Mugen.Core
 
         public void GotoFront(int index, int type = -1)
         {
-            if (null != _childs.At(index))
+            var node = _childs.At(index);
+            if (null == node) 
+                return;
+            
+            List<Node> listNode;
+
+            if (type == -1)
+                listNode = GroupAll();
+            else
+                listNode = GroupOf(type);
+
+            listNode = listNode.OrderByDescending(v => v._z).ToList(); // sort group by z !!
+
+            int indexBeginSwap = 0;
+
+            for (int i = 0; i < listNode.Count; i++)
             {
-                List<Node> listNode;
-
-                if (type == -1)
-                    listNode = GroupAll();
-                else
-                    listNode = GroupOf(type);
-
-                listNode = listNode.OrderByDescending(v => v._z).ToList(); // sort group by z !!
-
-                int indexNode = _childs.At(index)!._index;
-
-                int indexSwap = 0;
-                int it = 0;
-
-                for (int i = 0; i < listNode.Count; i++)
+                if (listNode[i]._index == node._index)
                 {
-                    if (listNode[i]._index == indexNode)
-                    {
-                        indexSwap = it;
-                        break;
-                    }
-                    ++it;
-                }
-
-                for (int i = indexSwap; i < listNode.Count - 1; ++i)
-                {
-                    float tmpZ = listNode[i]._z;
-                    listNode[i]._z = listNode[i + 1]._z;
-                    listNode[i + 1]._z = tmpZ;
-
-                    if (listNode[i]._z == listNode[i + 1]._z) // Avoid conflict same z
-                        --listNode[i]._z;
-
-                    Misc.Swap<Node>(listNode, i, i + 1);
-                }
-
-                for (int i = indexSwap; i < listNode.Count; ++i)
-                {
-                    _childs.SetAt(listNode[i]._index, listNode[i]);
+                    indexBeginSwap = i;
+                    break;
                 }
             }
-            else
+
+            for (int i = indexBeginSwap; i < listNode.Count - 1; i++)
             {
-                Console.WriteLine("GotoFront error at index : " + index);
+                float tmpZ = listNode[i]._z;
+                listNode[i]._z = listNode[i + 1]._z;
+                listNode[i + 1]._z = tmpZ;
+
+                if (listNode[i]._z == listNode[i + 1]._z) // Avoid conflict same z
+                    listNode[i]._z--;
+
+                Misc.Swap<Node>(listNode, i, i + 1);
+            }
+
+            for (int i = indexBeginSwap; i < listNode.Count; i++)
+            {
+                _childs.SetAt(listNode[i]._index, listNode[i]);
+
+
             }
 
         }
@@ -1171,7 +1168,17 @@ namespace Mugen.Core
         }
         public int ZIndex(int index)
         {
+            if (index < 0 || index >= _vecZIndex.Count) 
+                return -1;
+
             return _vecZIndex[index]._index;
+        }
+        public ZIndex? GetChildZIndex(int index)
+        {
+            if (index < 0 || index >= _vecZIndex.Count)
+                return null;
+
+            return _vecZIndex[index];
         }
         public Node SortZDescending()  // Descending Sort
         {

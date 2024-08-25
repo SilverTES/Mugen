@@ -4,7 +4,7 @@ namespace Mugen.Core
 {
     public class ZIndex
     {
-        public bool _isAlive = true; // Help Garbage Collector management ! if not null then check if _isActive or not !!!
+        public bool _isAlive = true; // Help Garbage Collector management ! if not null then check if _isAlive or not !!!
 
         public float _z = 0;
         public int _index = -1;
@@ -12,10 +12,10 @@ namespace Mugen.Core
     /// <summary>
     /// Base IContainer [object, object, object, ...] : Add, Delete, 
     /// </summary>
-    /// <typeparam name="OBJECT"></typeparam>
-    public class IContainer<OBJECT> where OBJECT : ZIndex
+    /// <typeparam name="T"></typeparam>
+    public class IContainer<T> where T : ZIndex
     {
-        public List<OBJECT?> _objects = new List<OBJECT?>();
+        public List<T?> _objects = new List<T?>();
         public Stack<int> _freeObjects = new Stack<int>();
 
         public int Count()
@@ -30,12 +30,12 @@ namespace Mugen.Core
         {
             return _objects.Count == 0;
         }
-        public void SetAt(int index, OBJECT obj)
+        public void SetAt(int index, T obj)
         {
             if (index >= 0 && index < _objects.Count)
                 _objects[index] = obj;
         }
-        public OBJECT? At(int index)
+        public T? At(int index)
         {
             if (index >= 0 && index < _objects.Count)
                 return _objects[index];
@@ -44,13 +44,13 @@ namespace Mugen.Core
 
         }
 
-        void AddObject(OBJECT obj)
+        void AddObject(T obj)
         {
             int index = _objects.Count;
             obj._index = index;
             _objects.Add(obj);
         }
-        public OBJECT? Add(OBJECT obj)
+        public T? Add(T obj)
         {
             if (null != obj)
             {
@@ -105,7 +105,7 @@ namespace Mugen.Core
                 }
 
         }
-        public void Delete(OBJECT obj)
+        public void Delete(T obj)
         {
             if (null != obj)
             {
@@ -118,11 +118,11 @@ namespace Mugen.Core
 
             }
         }
-        public OBJECT? First()
+        public T? First()
         {
             return _objects.First();
         }
-        public OBJECT? Last()
+        public T? Last()
         {
             return _objects.Last();
         }
