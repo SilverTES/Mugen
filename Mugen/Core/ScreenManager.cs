@@ -110,6 +110,12 @@ namespace Mugen.Core
 
         }
 
+        public static void Draw(GameTime gameTime, int indexLayer = -1, SpriteSortMode sortMode = SpriteSortMode.Deferred, BlendState blendState = null, SamplerState samplerState = null, DepthStencilState depthStencilState = null, RasterizerState rasterizerState = null, Effect effect = null, Matrix? transformMatrix = null)
+        {
+            BeginDraw(indexLayer, sortMode, blendState, samplerState, depthStencilState, rasterizerState, effect, transformMatrix);
+            DrawLayer(indexLayer, gameTime);
+            EndDraw();
+        }
         public static void BeginDraw(int indexLayer = -1, SpriteSortMode sortMode = SpriteSortMode.Deferred, BlendState blendState = null, SamplerState samplerState = null, DepthStencilState depthStencilState = null, RasterizerState rasterizerState = null, Effect effect = null, Matrix? transformMatrix = null)
         {
             if (indexLayer < 0 || indexLayer >= _layers!.Count())

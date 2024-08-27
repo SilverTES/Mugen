@@ -134,7 +134,7 @@ namespace Mugen.Core
 
         public IContainer<Node> _childs = new IContainer<Node>();
 
-        public List<ZIndex> _vecZIndex = new List<ZIndex>();
+        public List<ZIndex> _zIndexs = new List<ZIndex>();
         public ZIndex _frontZ = new ZIndex { _z = int.MaxValue, _index = 0 };
         public ZIndex _backZ = new ZIndex { _z = 0, _index = 0 };
 
@@ -147,9 +147,30 @@ namespace Mugen.Core
         public Action<Node>? _updateAction = null;
         public Action<Node, SpriteBatch>? _renderAction = null;
 
+        protected int _state;
+        protected int _prevState;
+
         #endregion
 
         #region Methodes
+        // --- Manage States
+        public void SetState(int state)
+        {
+            // Exit previous state
+            ExitState();
+            // change state to new state
+            _prevState = _state;
+            _state = state;
+            // Enter new state
+            EnterState();
+        }
+        public void BackState()
+        {
+            SetState(_prevState);
+        }
+        protected virtual void ExitState() {}
+        protected virtual void EnterState() {}
+        protected virtual void RunState(GameTime gameTime) {}
         // --- Navigation
         public Node SetAsNaviNodeFocus()
         {
@@ -237,10 +258,10 @@ namespace Mugen.Core
                 clone._collideZones[it.Key] = it.Value.Clone();
             }
 
-            clone._vecZIndex = new List<ZIndex>();
-            for (int i = 0; i < _vecZIndex.Count(); i++)
+            clone._zIndexs = new List<ZIndex>();
+            for (int i = 0; i < _zIndexs.Count(); i++)
             {
-                clone._vecZIndex.Add(_vecZIndex[i]);
+                clone._zIndexs.Add(_zIndexs[i]);
             }
 
             // -- Clone Addons
@@ -1120,7 +1141,7 @@ namespace Mugen.Core
             for (int index = 0; index < _childs.Count(); ++index)
             {
                 if (!_childs.IsEmpty())
-                    if (index < _vecZIndex.Count)
+                    if (index < _zIndexs.Count)
                     {
                         if (null != _childs.At(ZIndex(index)))
                         {
@@ -1151,7 +1172,7 @@ namespace Mugen.Core
             for (int index = 0; index < _childs.Count(); ++index)
             {
                 if (!_childs.IsEmpty())
-                    if (index < _vecZIndex.Count)
+                    if (index < _zIndexs.Count)
                     {
                         if (null != _childs.At(ZIndex(index)))
                             if (_childs.At(ZIndex(index))!._isVisible)
@@ -1168,17 +1189,17 @@ namespace Mugen.Core
         }
         public int ZIndex(int index)
         {
-            if (index < 0 || index >= _vecZIndex.Count) 
+            if (index < 0 || index >= _zIndexs.Count) 
                 return -1;
 
-            return _vecZIndex[index]._index;
+            return _zIndexs[index]._index;
         }
         public ZIndex? GetChildZIndex(int index)
         {
-            if (index < 0 || index >= _vecZIndex.Count)
+            if (index < 0 || index >= _zIndexs.Count)
                 return null;
 
-            return _vecZIndex[index];
+            return _zIndexs[index];
         }
         public Node SortZDescending()  // Descending Sort
         {
@@ -1193,62 +1214,65 @@ namespace Mugen.Core
         private void SortZIndexDescending(List<Node> vecEntity)
         {
             // Resize listZIndex if smaller than listObj
-            if (_vecZIndex.Count < vecEntity.Count)
+            if (_zIndexs.Count < vecEntity.Count)
             {
                 //mlog("- Resize ZIndex !\n");
-                for (int index = _vecZIndex.Count; index < vecEntity.Count; ++index)
+                for (int index = _zIndexs.Count; index < vecEntity.Count; ++index)
                 {
-                    _vecZIndex.Add(new ZIndex());
+                    _zIndexs.Add(new ZIndex());
                 }
             }
 
-            for (int index = 0; index < _vecZIndex.Count; ++index)
+            for (int index = 0; index < _zIndexs.Count; ++index)
             {
-                if (null != _vecZIndex[index])
-                    _vecZIndex[index]._index = index;
+                if (null != _zIndexs[index])
+                    _zIndexs[index]._index = index;
                 else
                     continue;
 
                 if (index >= 0 && index < vecEntity.Count)
                     if (null != vecEntity[index])
                     {
-                        _vecZIndex[index]._z = vecEntity[index]._z;
+                        _zIndexs[index]._z = vecEntity[index]._z;
                     }
                     else
-                        _vecZIndex[index]._z = 0;
+                        _zIndexs[index]._z = 0;
             }
 
-            _vecZIndex = _vecZIndex.OrderByDescending(v => v._z).ToList();
+            _zIndexs = _zIndexs.OrderByDescending(v => v._z).ToList();
+            //_zIndexs.Sort((index1, index2) => index2._z.CompareTo(index1._z));
         }
         private void SortZIndexAscending(List<Node> vecEntity)
         {
             // Resize listZIndex if smaller than listObj
-            if (_vecZIndex.Count < vecEntity.Count)
+            if (_zIndexs.Count < vecEntity.Count)
             {
                 //mlog("- Resize ZIndex !\n");
-                for (int index = _vecZIndex.Count; index < vecEntity.Count; ++index)
+                for (int index = _zIndexs.Count; index < vecEntity.Count; ++index)
                 {
-                    _vecZIndex.Add(new ZIndex());
+                    _zIndexs.Add(new ZIndex());
                 }
             }
 
-            for (int index = 0; index < _vecZIndex.Count; ++index)
+            for (int index = 0; index < _zIndexs.Count; ++index)
             {
-                if (null != _vecZIndex[index])
-                    _vecZIndex[index]._index = index;
+                if (null != _zIndexs[index])
+                    _zIndexs[index]._index = index;
                 else
                     continue;
 
                 if (index >= 0 && index < vecEntity.Count)
                     if (null != vecEntity[index])
                     {
-                        _vecZIndex[index]._z = vecEntity[index]._z;
+                        _zIndexs[index]._z = vecEntity[index]._z;
                     }
                     else
-                        _vecZIndex[index]._z = 0;
+                        _zIndexs[index]._z = 0;
             }
 
-            _vecZIndex = _vecZIndex.OrderBy(v => v._z).ToList();
+            _zIndexs = _zIndexs.OrderBy(v => v._z).ToList();
+            //_zIndexs.Sort((index1, index2) => index1._z.CompareTo(index2._z));
+
         }
         // Collisions methods !
         public Node SetCollideZone(int index, RectangleF rect)
