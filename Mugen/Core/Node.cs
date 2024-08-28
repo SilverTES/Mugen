@@ -1,13 +1,8 @@
 ﻿using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework;
-using Mugen.Animation;
 using Mugen.Physics;
-using RectangleF = Mugen.Physics.RectangleF;
-using Rectangle = Microsoft.Xna.Framework.Rectangle;
 using Mugen.GUI;
 using Mugen.Event;
-using System;
-using System.Reflection;
 
 namespace Mugen.Core
 {
@@ -37,7 +32,6 @@ namespace Mugen.Core
         public bool _onFocus = false; // trigger : is focused navi
         public bool _isFocus = false; // status : is focused navi
     }
-
     public class Node : ZIndex, IClone<Node>
     {
         #region Attributes

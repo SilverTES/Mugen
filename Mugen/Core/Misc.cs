@@ -60,10 +60,12 @@ namespace Mugen.Core
     public static class StaticType<T>
     {
         public static int _type = 0;
+        public static string _name = "null";
     }
     public static class UID
     {
         static int _uniqueType = 0;
+        private static readonly List<string> _types = ["null"];
 
         public static int Get<T>()
         {
@@ -75,9 +77,25 @@ namespace Mugen.Core
             {
                 ++_uniqueType;
                 StaticType<T>._type = _uniqueType;
+                StaticType<T>._name = typeof(T).Name;
+                _types.Add(StaticType<T>._name);
             }
 
             return StaticType<T>._type;
+        }
+        public static string Name<T>()
+        {
+            if (StaticType<T>._type != 0)
+                return StaticType<T>._name;
+
+            return "null";
+        }
+        public static string Name(int indexType)
+        {
+            if (indexType < 0 || indexType >= _types.Count)
+                return "null";
+
+            return _types[indexType];
         }
 
     }
