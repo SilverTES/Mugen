@@ -55,6 +55,14 @@ namespace Mugen.Core
     public static class Const
     {
         public const int NoIndex = -1;
+
+    }
+    public static class Enums
+    {
+        public static int Count<T>()
+        {
+            return Enum.GetNames(typeof(T)).Length;
+        }
     }
 
     public static class StaticType<T>

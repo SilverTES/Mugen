@@ -141,29 +141,66 @@ namespace Mugen.Core
         public Action<Node>? _updateAction = null;
         public Action<Node, SpriteBatch>? _renderAction = null;
 
-        protected int _state;
-        protected int _prevState;
+        // State Attributes
+        protected int _state = 0;
+        protected int _prevState = 0;
+
+        protected Action[] _onStates = [];
+        protected Action[] _offStates = [];
 
         #endregion
 
         #region Methodes
         // --- Manage States
+        protected void InitStates(int nbStates)
+        {
+            _onStates = new Action[nbStates];
+            _offStates = new Action[nbStates];
+        }
+        protected void SetStateOn(int state, Action onActionState)
+        {
+            if (state < 0 || state >= _onStates.Length)
+                return;
+
+            _onStates[state] = onActionState;
+        }
+        protected void SetStateOff(int state, Action offActionState)
+        {
+            if (state < 0 || state >= _onStates.Length)
+                return;
+
+            _onStates[state] = offActionState;
+        }
+
         public void SetState(int state)
         {
             // Exit previous state
-            ExitState();
+            OffState(_prevState);
             // change state to new state
             _prevState = _state;
             _state = state;
             // Enter new state
-            EnterState();
+            OnState(_state);
         }
         public void BackState()
         {
             SetState(_prevState);
         }
-        protected virtual void ExitState() {}
-        protected virtual void EnterState() {}
+        private void OffState(int state) 
+        {
+            if (state < 0 || state >= _onStates.Length) 
+                return;
+
+            if (_offStates[state] != null)
+                _offStates[state]();
+        }
+        private void OnState(int state) 
+        {
+            if (state < 0 || state >= _onStates.Length)
+                return;
+            if (_onStates[state] != null)
+                _onStates[state]();
+        }
         protected virtual void RunState(GameTime gameTime) {}
         // --- Navigation
         public Node SetAsNaviNodeFocus()
