@@ -26,6 +26,17 @@ namespace Mugen.Core
 
         private static Stack<Node> _stackScreen = new Stack<Node>();
 
+        public static RenderTarget2D? GetLayer(int indexLayer)
+        {
+            if (_layers == null)
+                return null;
+
+            if (indexLayer < 0 || indexLayer > _layers.Length)
+                return null;
+
+            return _layers[indexLayer];
+
+        }
         public static Node ToScreen(Node screen)
         {
             _stackScreen.Push(screen);
