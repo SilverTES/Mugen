@@ -44,7 +44,7 @@ namespace Mugen.Core
         // Identity 
         public int _type = Const.NoIndex; // Type of Node
         public int _subType = Const.NoIndex; // SubType of Node 
-        public List<int> _class = new List<int>(); // List of Class Selector 
+        public HashSet<int> _class = []; // List of Class Selector 
         public string _name = ""; // name of the node
 
         // Animation
