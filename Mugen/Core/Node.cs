@@ -123,6 +123,27 @@ namespace Mugen.Core
         }
         protected virtual void OnMessage() { }
 
+        public string? _strMessage = null;
+
+        public bool HasStrMessage()
+        {
+            return null != _strMessage;
+        }
+        public void EndStrMessage()
+        { 
+            _strMessage = null; 
+        }
+        public void PollStrMessage()
+        {
+            if (null != _strMessage)
+            {
+                OnStrMessage();
+                _strMessage = null;
+            }
+        }
+
+        protected virtual void OnStrMessage() { }
+
         // map of Collide Zone(Rect) of Clip
         public Dictionary<int, Collide.Zone> _collideZones = new Dictionary<int, Collide.Zone>();
 
@@ -181,6 +202,10 @@ namespace Mugen.Core
             _state = state;
             // Enter new state
             OnState(_state);
+        }
+        public int GetState()
+        {
+            return _state;
         }
         public void BackState()
         {
