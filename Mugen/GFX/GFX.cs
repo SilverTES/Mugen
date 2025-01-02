@@ -769,7 +769,7 @@ namespace Mugen.GFX
         {
             Sight(batch, position.X, position.Y, screenW, screenH, color, thickness);
         }
-        public static void Grid(SpriteBatch batch, float x, float y, float gridW, float gridH, int cellW, int cellH, Color color, float thickness = 1f)
+        public static void Grid(SpriteBatch batch, float x, float y, float gridW, float gridH, float cellW, float cellH, Color color, float thickness = 1f)
         {
             for (int i = 0; i < Math.Floor(gridW / cellW) + 1; i++)
             {
@@ -787,7 +787,7 @@ namespace Mugen.GFX
                     color, thickness);
             }
         }
-        public static void Grid(SpriteBatch batch, Vector2 position, float gridW, float gridH, int cellW, int cellH, Color color, float thickness = 1f)
+        public static void Grid(SpriteBatch batch, Vector2 position, float gridW, float gridH, float cellW, float cellH, Color color, float thickness = 1f)
         {
             Grid(batch, position.X, position.Y, gridW, gridH, cellW, cellH, color, thickness);
         }
