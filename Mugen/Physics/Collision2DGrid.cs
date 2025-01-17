@@ -186,9 +186,10 @@ namespace Mugen.Physics
             _originY = y;
         }
 
-        public void Update()
+        public void UpdateGridSystemZone(Node nodeContainer)
         {
-
+            Collision2D.ResetAllZone(nodeContainer);
+            Collision2D.GridSystemZone(nodeContainer, this);
         }
         public void Render(SpriteBatch batch, SpriteFont font, Color color)
         {
