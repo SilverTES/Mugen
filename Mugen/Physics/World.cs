@@ -567,6 +567,7 @@ namespace Mugen.Physics
 
         public const float RAD_0 = 0;
         public const float RAD_1 = 0.01745329f;
+        public const float RAD_5 = 0.08726646f;
         public const float RAD_10 = 0.1745329f;
         public const float RAD_15 = 0.2617994f;
         public const float RAD_20 = 0.3490659f;
