@@ -3,37 +3,39 @@ using Microsoft.Xna.Framework;
 
 namespace Mugen.Core
 {
-    public class WindowManager
+    public static class WindowManager
     {
         #region Attributes
 
-        Game _game;
+        private static Game? _game;
 
         //public RenderTarget2D RenderTarget { get; private set; }
-        private GraphicsDeviceManager _graphicsDeviceManager;
-        public GraphicsDeviceManager GDManager => _graphicsDeviceManager;
+        private static GraphicsDeviceManager? _graphicsDeviceManager;
+        public static GraphicsDeviceManager? GDManager => _graphicsDeviceManager;
 
-        private Vector2 Mouse = new();
+        public static SpriteBatch? _batch;
 
-        public bool IsFullscreen { get; private set; } = false;
+        private static Vector2 Mouse = new();
 
-        readonly int _gameScreenW;
-        readonly int _gameScreenH;
-        private Point _screenSize;
+        public static bool IsFullscreen { get; private set; } = false;
 
-        private float Scale = 1f;
+        static int _gameScreenW;
+        static int _gameScreenH;
+        private static Point _screenSize;
 
-        private int _windowW;
-        private int _windowH;
+        private static float Scale = 1f;
+
+        private static int _windowW;
+        private static int _windowH;
 
 
-        private int _curWindowW;
-        private int _curWindowH;
+        private static int _curWindowW;
+        private static int _curWindowH;
 
-        private Rectangle _strechingRect = new();
+        private static Rectangle _strechingRect = new();
 
         #endregion
-        public WindowManager(Game game, int gameScreenW, int gameScreenH)
+        public static void Init(Game game, int gameScreenW, int gameScreenH)
         {
             _game = game;
             _graphicsDeviceManager = new GraphicsDeviceManager(game);
@@ -52,41 +54,52 @@ namespace Mugen.Core
 
             //RenderTarget = new RenderTarget2D(_game.GraphicsDevice, _gameScreenW, _gameScreenH);
 
+            _batch = new SpriteBatch(game.GraphicsDevice);
+
             Node._nodeRoot.SetSize(_gameScreenW, _gameScreenH);
+
+            GFX.GFX.Init(game.GraphicsDevice);
+
+            //ScreenManager.Init(nbLayers, layerOrders);
         }
 
-        public Point GetScreenSize()
+        //internal static void SetSpriteBatch(SpriteBatch spriteBatch)
+        //{
+        //    _batch = spriteBatch;
+        //}
+
+        public static Point GetScreenSize()
         {
             return _screenSize;
         }
-        public Vector2 GetMousePosition()
+        public static Vector2 GetMousePosition()
         {
             return Mouse;
         }
-        public void ToggleFullscreen()
+        public static void ToggleFullscreen()
         {
             IsFullscreen = !IsFullscreen;
 
             if (IsFullscreen)
             {
-                _windowW = _game.Window.ClientBounds.Width;
+                _windowW = _game!.Window.ClientBounds.Width;
                 _windowH = _game.Window.ClientBounds.Height;
             }
             else
             {
-                _graphicsDeviceManager.PreferredBackBufferWidth = _windowW;
+                _graphicsDeviceManager!.PreferredBackBufferWidth = _windowW;
                 _graphicsDeviceManager.PreferredBackBufferHeight = _windowH;
             }
 
-            _graphicsDeviceManager.ToggleFullScreen();
+            _graphicsDeviceManager!.ToggleFullScreen();
 
         }
-        public void PoolWindowSize()
+        public static void PoolWindowSize()
         {
-            _curWindowW = _game.Window.ClientBounds.Width;
+            _curWindowW = _game!.Window.ClientBounds.Width;
             _curWindowH = _game.Window.ClientBounds.Height;
         }
-        public Rectangle StrechtingRect()
+        public static Rectangle StrechtingRect()
         {
             _strechingRect.X = (int)((_curWindowW - (_gameScreenW * Scale)) * 0.5f);
             _strechingRect.Y = (int)((_curWindowH - (_gameScreenH * Scale)) * 0.5f);
@@ -95,19 +108,20 @@ namespace Mugen.Core
 
             return _strechingRect;
         }
-        public void SetWindowSize(int windowW, int windowH)
+        public static void SetWindowSize(int windowW, int windowH)
         {
-            _graphicsDeviceManager.PreferredBackBufferWidth = windowW;
+            _graphicsDeviceManager!.PreferredBackBufferWidth = windowW;
             _graphicsDeviceManager.PreferredBackBufferHeight = windowH;
 
             _graphicsDeviceManager.ApplyChanges();
         }
-        public void SetScale(float scale)
+        public static void SetScale(float scale)
         {
             SetWindowSize((int)(_windowW * scale), (int)(_windowH * scale));
         }
-        public void Update(Vector2 mousePos)
+        public static void Update(GameTime gameTime)
         {
+            Vector2 mousePos = Microsoft.Xna.Framework.Input.Mouse.GetState().Position.ToVector2();
             PoolWindowSize();
 
             Scale = MathF.Min((float)_curWindowW / _gameScreenW, (float)_curWindowH / _gameScreenH);
@@ -116,6 +130,9 @@ namespace Mugen.Core
             Mouse.Y = MathF.Round((mousePos.Y - (_curWindowH - (_gameScreenH * Scale)) * 0.5f) / Scale);
 
             Mouse = Vector2.Clamp(Mouse, new Vector2(0, 0), new Vector2(_gameScreenW, _gameScreenH));
+
+
+            //ScreenManager.Update(gameTime);
         }
         //public void Draw(SpriteBatch batch)
         //{

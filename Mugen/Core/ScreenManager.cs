@@ -9,7 +9,7 @@ namespace Mugen.Core
     {
         public static RenderTarget2D[]? _layers;
 
-        private static WindowManager? _windowManager;
+        //private static WindowManager? _windowManager;
         private static SpriteBatch? _spriteBatch;
 
         private static Node _curScreen = new Node();
@@ -58,10 +58,10 @@ namespace Mugen.Core
 
             return _stackScreen.Peek();
         }
-        public static void Init(WindowManager windowManager, SpriteBatch spriteBatch, Node initialScreen, int nbLayers, List<int>? layersOrder = null)
+        public static void Init(Node initialScreen, int nbLayers, List<int>? layersOrder = null)
         {
-            _windowManager = windowManager;
-            _spriteBatch = spriteBatch;
+            //_windowManager = windowManager;
+            _spriteBatch = WindowManager._batch;
 
             _curScreen = initialScreen;
             _showScreen = initialScreen;
@@ -72,9 +72,15 @@ namespace Mugen.Core
 
             for (int i = 0; i < _layers.Length; i++)
             {
-                _layers[i] = new(_windowManager.GDManager.GraphicsDevice, _windowManager.GetScreenSize().X, _windowManager.GetScreenSize().Y);
+                _layers[i] = new(WindowManager.GDManager!.GraphicsDevice, WindowManager.GetScreenSize().X, WindowManager.GetScreenSize().Y);
             }
 
+        }
+        public static void Init(Node initialScreen)
+        {
+            _curScreen = initialScreen;
+            _showScreen = initialScreen;
+            _prevScreen = initialScreen;
         }
         public static void SetLayersOrder(List<int> layersOrder)
         {
@@ -138,19 +144,19 @@ namespace Mugen.Core
         {
             if (indexLayer < 0 || indexLayer >= _layers!.Count())
             {
-                _windowManager!.GDManager.GraphicsDevice.SetRenderTarget(null);
-                _spriteBatch!.Begin(sortMode, blendState, samplerState, depthStencilState, rasterizerState, effect, transformMatrix);
+                _spriteBatch!.GraphicsDevice.SetRenderTarget(null);
+                _spriteBatch.Begin(sortMode, blendState, samplerState, depthStencilState, rasterizerState, effect, transformMatrix);
             }
             else
             {
-                _windowManager!.GDManager.GraphicsDevice.SetRenderTarget(_layers![indexLayer]);
-                _spriteBatch!.Begin(sortMode, blendState, samplerState, depthStencilState, rasterizerState, effect, transformMatrix);
+                _spriteBatch!.GraphicsDevice.SetRenderTarget(_layers![indexLayer]);
+                _spriteBatch.Begin(sortMode, blendState, samplerState, depthStencilState, rasterizerState, effect, transformMatrix);
             }
         }
         public static void BeginShow(SpriteSortMode sortMode = SpriteSortMode.Deferred, BlendState? blendState = null, SamplerState? samplerState = null, DepthStencilState? depthStencilState = null, RasterizerState? rasterizerState = null, Effect? effect = null, Matrix? transformMatrix = null)
         {
-            _windowManager!.GDManager.GraphicsDevice.SetRenderTarget(null);
-            _spriteBatch!.Begin(sortMode, blendState, samplerState, depthStencilState, rasterizerState, effect, transformMatrix);
+            _spriteBatch!.GraphicsDevice.SetRenderTarget(null);
+            _spriteBatch.Begin(sortMode, blendState, samplerState, depthStencilState, rasterizerState, effect, transformMatrix);
         }
         public static void EndDraw()
         {
@@ -172,25 +178,25 @@ namespace Mugen.Core
             if (indexLayer < 0 || indexLayer >= _layers!.Count())
                 return;
 
-            _spriteBatch!.Draw(_layers![indexLayer], _windowManager!.StrechtingRect(), color);
+            _spriteBatch!.Draw(_layers![indexLayer], WindowManager.StrechtingRect(), color);
         }
         public static void DrawScreen(GameTime gameTime, SpriteSortMode sortMode = SpriteSortMode.Deferred, BlendState? blendState = null, SamplerState? samplerState = null, DepthStencilState? depthStencilState = null, RasterizerState? rasterizerState = null, Effect? effect = null, Matrix? transformMatrix = null)
         {
             for (int i = 0; i < _layersOrder!.Count; i++)
             {
-                ScreenManager.BeginDraw(_layersOrder[i], sortMode, blendState, samplerState, depthStencilState, rasterizerState, effect, transformMatrix);
-                ScreenManager.DrawLayer(_layersOrder[i], gameTime);
-                ScreenManager.EndDraw();
+                BeginDraw(_layersOrder[i], sortMode, blendState, samplerState, depthStencilState, rasterizerState, effect, transformMatrix);
+                DrawLayer(_layersOrder[i], gameTime);
+                EndDraw();
             }
         }
         public static void ShowScreen(GameTime gameTime, SpriteSortMode sortMode = SpriteSortMode.Deferred, BlendState? blendState = null, SamplerState? samplerState = null, DepthStencilState? depthStencilState = null, RasterizerState? rasterizerState = null, Effect? effect = null, Matrix? transformMatrix = null)
         {
-            ScreenManager.BeginShow(sortMode, blendState, samplerState, depthStencilState, rasterizerState, effect, transformMatrix);
+            BeginShow(sortMode, blendState, samplerState, depthStencilState, rasterizerState, effect, transformMatrix);
             for (int i = 0; i < _layersOrder!.Count; i++)
             {
-                ScreenManager.ShowLayer(_layersOrder[i], Color.White);
+                ShowLayer(_layersOrder[i], Color.White);
             }
-            ScreenManager.EndShow();
+            EndShow();
         }
         public static void Swap()
         {
