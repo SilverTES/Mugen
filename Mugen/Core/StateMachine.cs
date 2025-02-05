@@ -1,4 +1,5 @@
 ﻿using Microsoft.Xna.Framework;
+using Microsoft.Xna.Framework.Input;
 
 namespace Mugen.Core
 {
@@ -19,17 +20,30 @@ namespace Mugen.Core
     public class StateMachine
     {
         private State _curState;
+        public State CurState => _curState;
         public StateMachine(State initialState)
         {
             _curState = initialState;
             _curState._stateMachine = this;
         }
-
-        public void ChangeState(State newState)
+        /// <summary>
+        /// Force change currentState to newState
+        /// </summary>
+        /// <param name="newState"></param>
+        public void SetState(State newState)
         {
             _curState.Exit();
             _curState = newState;
             _curState.Enter();
+        }
+        /// <summary>
+        /// Change currentState to newState if newState is different than currentState
+        /// </summary>
+        /// <param name="newState"></param>
+        public void ChangeState(State newState)
+        {
+            if (newState != _curState)
+                SetState(newState);
         }
 
         public void Update(GameTime gameTime)
