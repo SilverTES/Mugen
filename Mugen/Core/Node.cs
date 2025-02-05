@@ -187,17 +187,17 @@ namespace Mugen.Core
         }
         protected void SetStateOff(int state, Action offActionState)
         {
-            if (state < 0 || state >= _onStates.Length)
+            if (state < 0 || state >= _offStates.Length)
                 return;
 
-            _onStates[state] = offActionState;
+            _offStates[state] = offActionState;
         }
 
         public void SetState(int state)
         {
             // Exit previous state
-            OffState(_prevState);
-            // change state to new state
+            OffState(_state);
+            // change state to new state , save previous state
             _prevState = _state;
             _state = state;
             // Enter new state
