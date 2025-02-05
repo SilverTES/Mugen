@@ -163,8 +163,8 @@ namespace Mugen.Core
         public Action<Node, SpriteBatch>? _renderAction = null;
 
         // State Attributes
-        protected int _state = 0;
-        protected int _prevState = 0;
+        protected int _state = Const.NoIndex;
+        protected int _prevState = Const.NoIndex;
 
         protected Action[] _onStates = [];
         protected Action[] _offStates = [];
