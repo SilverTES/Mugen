@@ -203,13 +203,24 @@ namespace Mugen.Core
             // Enter new state
             OnState(_state);
         }
+        /// <summary>
+        /// Change state only if different than current state
+        /// </summary>
+        /// <param name="state"></param>
+        public void ChangeState(int state)
+        {
+            if (_state != state)
+            {
+                SetState(state);
+            }
+        }
         public int GetState()
         {
             return _state;
         }
         public void BackState()
         {
-            SetState(_prevState);
+            ChangeState(_prevState);
         }
         private void OffState(int state) 
         {
