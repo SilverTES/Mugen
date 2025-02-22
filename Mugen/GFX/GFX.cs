@@ -80,11 +80,11 @@ namespace Mugen.GFX
         }
 
         #region Draw Texture Methods
-        public static void Draw(SpriteBatch batch, Texture2D texture, Color color, float rotation, Vector2 position, Vector2 origin, Vector2 scale, SpriteEffects spriteEffect = SpriteEffects.None, float layerDepth = 0f)
+        public static void Draw(this SpriteBatch batch, Texture2D texture, Color color, float rotation, Vector2 position, Vector2 origin, Vector2 scale, SpriteEffects spriteEffect = SpriteEffects.None, float layerDepth = 0f)
         {
             batch.Draw(texture, position, texture.Bounds, color, rotation, origin, scale, spriteEffect, layerDepth);
         }
-        public static void Draw(SpriteBatch batch, Texture2D texture, Color color, float rotation, Vector2 position, Position origin, Vector2 scale, SpriteEffects spriteEffect = SpriteEffects.None, float layerDepth = 0f)
+        public static void Draw(this SpriteBatch batch, Texture2D texture, Color color, float rotation, Vector2 position, Position origin, Vector2 scale, SpriteEffects spriteEffect = SpriteEffects.None, float layerDepth = 0f)
         {
             Vector2 pivot = new();
             int w = texture.Width;
@@ -140,7 +140,7 @@ namespace Mugen.GFX
         #endregion
 
         #region Draw Text Methods
-        public static void BorderedString(SpriteBatch batch, SpriteFont font, string text, Vector2 pos, Color colorFG, Color colorBG)
+        public static void BorderedString(this SpriteBatch batch, SpriteFont font, string text, Vector2 pos, Color colorFG, Color colorBG)
         {
             batch.DrawString(font, text, pos + new Vector2(-1, 0), colorBG);
             batch.DrawString(font, text, pos + new Vector2(1, 0), colorBG);
@@ -150,154 +150,154 @@ namespace Mugen.GFX
             batch.DrawString(font, text, pos, colorFG);
         }
         // Align 
-        public static void LeftTopString(SpriteBatch batch, SpriteFont font, string text, float x, float y, Color color)
+        public static void LeftTopString(this SpriteBatch batch, SpriteFont font, string text, float x, float y, Color color)
         {
             batch.DrawString(font, text, new Vector2(x, y), color);
         }
-        public static void LeftTopString(SpriteBatch batch, SpriteFont font, string text, Vector2 position, Color color)
+        public static void LeftTopString(this SpriteBatch batch, SpriteFont font, string text, Vector2 position, Color color)
         {
             batch.DrawString(font, text, position, color);
         }
-        public static void LeftMiddleString(SpriteBatch batch, SpriteFont font, string text, float x, float y, Color color)
+        public static void LeftMiddleString(this SpriteBatch batch, SpriteFont font, string text, float x, float y, Color color)
         {
             batch.DrawString(font, text, new Vector2(x, y - font.MeasureString(text).Y / 2), color);
         }
-        public static void LeftMiddleString(SpriteBatch batch, SpriteFont font, string text, Vector2 position, Color color)
+        public static void LeftMiddleString(this SpriteBatch batch, SpriteFont font, string text, Vector2 position, Color color)
         {
             batch.DrawString(font, text, new Vector2(position.X, position.Y - font.MeasureString(text).Y / 2), color);
         }
-        public static void LeftBottomString(SpriteBatch batch, SpriteFont font, string text, float x, float y, Color color)
+        public static void LeftBottomString(this SpriteBatch batch, SpriteFont font, string text, float x, float y, Color color)
         {
             batch.DrawString(font, text, new Vector2(x, y - font.MeasureString(text).Y), color);
         }
-        public static void LeftBottomString(SpriteBatch batch, SpriteFont font, string text, Vector2 position, Color color)
+        public static void LeftBottomString(this SpriteBatch batch, SpriteFont font, string text, Vector2 position, Color color)
         {
             batch.DrawString(font, text, new Vector2(position.X, position.Y - font.MeasureString(text).Y), color);
         }
-        public static void RightTopString(SpriteBatch batch, SpriteFont font, string text, float x, float y, Color color)
+        public static void RightTopString(this SpriteBatch batch, SpriteFont font, string text, float x, float y, Color color)
         {
             batch.DrawString(font, text, new Vector2(x - font.MeasureString(text).X, y), color);
         }
-        public static void RightTopString(SpriteBatch batch, SpriteFont font, string text, Vector2 position, Color color)
+        public static void RightTopString(this SpriteBatch batch, SpriteFont font, string text, Vector2 position, Color color)
         {
             batch.DrawString(font, text, new Vector2(position.X - font.MeasureString(text).X, position.Y), color);
         }
-        public static void RightMiddleString(SpriteBatch batch, SpriteFont font, string text, float x, float y, Color color)
+        public static void RightMiddleString(this SpriteBatch batch, SpriteFont font, string text, float x, float y, Color color)
         {
             batch.DrawString(font, text, new Vector2(x - font.MeasureString(text).X, y - font.MeasureString(text).Y / 2), color);
         }
-        public static void RightMiddleString(SpriteBatch batch, SpriteFont font, string text, Vector2 position, Color color)
+        public static void RightMiddleString(this SpriteBatch batch, SpriteFont font, string text, Vector2 position, Color color)
         {
             batch.DrawString(font, text, new Vector2(position.X - font.MeasureString(text).X, position.Y - font.MeasureString(text).Y / 2), color);
         }
-        public static void RightBottomString(SpriteBatch batch, SpriteFont font, string text, float x, float y, Color color)
+        public static void RightBottomString(this SpriteBatch batch, SpriteFont font, string text, float x, float y, Color color)
         {
             batch.DrawString(font, text, new Vector2(x - font.MeasureString(text).X, y - font.MeasureString(text).Y), color);
         }
-        public static void RightBottomString(SpriteBatch batch, SpriteFont font, string text, Vector2 position, Color color)
+        public static void RightBottomString(this SpriteBatch batch, SpriteFont font, string text, Vector2 position, Color color)
         {
             batch.DrawString(font, text, new Vector2(position.X - font.MeasureString(text).X, position.Y - font.MeasureString(text).Y), color);
         }
-        public static void LeftTopBorderedString(SpriteBatch batch, SpriteFont font, string text, float x, float y, Color colorFG, Color colorBG)
+        public static void LeftTopBorderedString(this SpriteBatch batch, SpriteFont font, string text, float x, float y, Color colorFG, Color colorBG)
         {
             BorderedString(batch, font, text, new Vector2(x, y), colorFG, colorBG);
         }
-        public static void LeftTopBorderedString(SpriteBatch batch, SpriteFont font, string text, Vector2 position, Color colorFG, Color colorBG)
+        public static void LeftTopBorderedString(this SpriteBatch batch, SpriteFont font, string text, Vector2 position, Color colorFG, Color colorBG)
         {
             BorderedString(batch, font, text, position, colorFG, colorBG);
         }
-        public static void LeftMiddleBorderedString(SpriteBatch batch, SpriteFont font, string text, float x, float y, Color colorFG, Color colorBG)
+        public static void LeftMiddleBorderedString(this SpriteBatch batch, SpriteFont font, string text, float x, float y, Color colorFG, Color colorBG)
         {
             BorderedString(batch, font, text, new Vector2(x, y - font.MeasureString(text).Y / 2), colorFG, colorBG);
         }
-        public static void LeftMiddleBorderedString(SpriteBatch batch, SpriteFont font, string text, Vector2 position, Color colorFG, Color colorBG)
+        public static void LeftMiddleBorderedString(this SpriteBatch batch, SpriteFont font, string text, Vector2 position, Color colorFG, Color colorBG)
         {
             BorderedString(batch, font, text, new Vector2(position.X, position.Y - font.MeasureString(text).Y / 2), colorFG, colorBG);
         }
-        public static void LeftBottomBorderedString(SpriteBatch batch, SpriteFont font, string text, float x, float y, Color colorFG, Color colorBG)
+        public static void LeftBottomBorderedString(this SpriteBatch batch, SpriteFont font, string text, float x, float y, Color colorFG, Color colorBG)
         {
             BorderedString(batch, font, text, new Vector2(x, y - font.MeasureString(text).Y), colorFG, colorBG);
         }
-        public static void LeftBottomBorderedString(SpriteBatch batch, SpriteFont font, string text, Vector2 position, Color colorFG, Color colorBG)
+        public static void LeftBottomBorderedString(this SpriteBatch batch, SpriteFont font, string text, Vector2 position, Color colorFG, Color colorBG)
         {
             BorderedString(batch, font, text, new Vector2(position.X, position.Y - font.MeasureString(text).Y), colorFG, colorBG);
         }
-        public static void RightTopBorderedString(SpriteBatch batch, SpriteFont font, string text, float x, float y, Color colorFG, Color colorBG)
+        public static void RightTopBorderedString(this SpriteBatch batch, SpriteFont font, string text, float x, float y, Color colorFG, Color colorBG)
         {
             BorderedString(batch, font, text, new Vector2(x - font.MeasureString(text).X, y), colorFG, colorBG);
         }
-        public static void RightTopBorderedString(SpriteBatch batch, SpriteFont font, string text, Vector2 position, Color colorFG, Color colorBG)
+        public static void RightTopBorderedString(this SpriteBatch batch, SpriteFont font, string text, Vector2 position, Color colorFG, Color colorBG)
         {
             BorderedString(batch, font, text, new Vector2(position.X - font.MeasureString(text).X, position.Y), colorFG, colorBG);
         }
-        public static void RightMiddleBorderedString(SpriteBatch batch, SpriteFont font, string text, float x, float y, Color colorFG, Color colorBG)
+        public static void RightMiddleBorderedString(this SpriteBatch batch, SpriteFont font, string text, float x, float y, Color colorFG, Color colorBG)
         {
             BorderedString(batch, font, text, new Vector2(x - font.MeasureString(text).X, y - font.MeasureString(text).Y / 2), colorFG, colorBG);
         }
-        public static void RightMiddleBorderedString(SpriteBatch batch, SpriteFont font, string text, Vector2 position, Color colorFG, Color colorBG)
+        public static void RightMiddleBorderedString(this SpriteBatch batch, SpriteFont font, string text, Vector2 position, Color colorFG, Color colorBG)
         {
             BorderedString(batch, font, text, new Vector2(position.X - font.MeasureString(text).X, position.Y - font.MeasureString(text).Y / 2), colorFG, colorBG);
         }
-        public static void RightBottomBorderedString(SpriteBatch batch, SpriteFont font, string text, float x, float y, Color colorFG, Color colorBG)
+        public static void RightBottomBorderedString(this SpriteBatch batch, SpriteFont font, string text, float x, float y, Color colorFG, Color colorBG)
         {
             BorderedString(batch, font, text, new Vector2(x - font.MeasureString(text).X, y - font.MeasureString(text).Y), colorFG, colorBG);
         }
-        public static void RightBottomBorderedString(SpriteBatch batch, SpriteFont font, string text, Vector2 position, Color colorFG, Color colorBG)
+        public static void RightBottomBorderedString(this SpriteBatch batch, SpriteFont font, string text, Vector2 position, Color colorFG, Color colorBG)
         {
             BorderedString(batch, font, text, new Vector2(position.X - font.MeasureString(text).X, position.Y - font.MeasureString(text).Y), colorFG, colorBG);
         }
 
         // Align Center X, Y,  XY
-        public static void TopCenterString(SpriteBatch batch, SpriteFont font, string text, float x, float y, Color color)
+        public static void TopCenterString(this SpriteBatch batch, SpriteFont font, string text, float x, float y, Color color)
         {
             batch.DrawString(font, text, new Vector2(x - font.MeasureString(text).X / 2, y), color);
         }
-        public static void TopCenterString(SpriteBatch batch, SpriteFont font, string text, Vector2 position, Color color)
+        public static void TopCenterString(this SpriteBatch batch, SpriteFont font, string text, Vector2 position, Color color)
         {
             batch.DrawString(font, text, new Vector2(position.X - font.MeasureString(text).X / 2, position.Y), color);
         }
-        public static void BottomCenterString(SpriteBatch batch, SpriteFont font, string text, float x, float y, Color color)
+        public static void BottomCenterString(this SpriteBatch batch, SpriteFont font, string text, float x, float y, Color color)
         {
             batch.DrawString(font, text, new Vector2(x - font.MeasureString(text).X / 2, y - font.MeasureString(text).Y), color);
         }
-        public static void BottomCenterString(SpriteBatch batch, SpriteFont font, string text, Vector2 position, Color color)
+        public static void BottomCenterString(this SpriteBatch batch, SpriteFont font, string text, Vector2 position, Color color)
         {
             batch.DrawString(font, text, new Vector2(position.X - font.MeasureString(text).X / 2, position.Y - font.MeasureString(text).Y), color);
         }
-        public static void CenterStringXY(SpriteBatch batch, SpriteFont font, string text, float x, float y, Color color)
+        public static void CenterStringXY(this SpriteBatch batch, SpriteFont font, string text, float x, float y, Color color)
         {
             batch.DrawString(font, text, new Vector2(x - font.MeasureString(text).X / 2, y - font.MeasureString(text).Y / 2), color);
         }
-        public static void CenterStringXY(SpriteBatch batch, SpriteFont font, string text, Vector2 position, Color color)
+        public static void CenterStringXY(this SpriteBatch batch, SpriteFont font, string text, Vector2 position, Color color)
         {
             batch.DrawString(font, text, new Vector2(position.X - font.MeasureString(text).X / 2, position.Y - font.MeasureString(text).Y / 2), color);
         }
-        public static void TopCenterBorderedString(SpriteBatch batch, SpriteFont font, string text, float x, float y, Color colorFG, Color colorBG)
+        public static void TopCenterBorderedString(this SpriteBatch batch, SpriteFont font, string text, float x, float y, Color colorFG, Color colorBG)
         {
             BorderedString(batch, font, text, new Vector2(x - font.MeasureString(text).X / 2, y), colorFG, colorBG);
         }
-        public static void TopCenterBorderedString(SpriteBatch batch, SpriteFont font, string text, Vector2 position, Color colorFG, Color colorBG)
+        public static void TopCenterBorderedString(this SpriteBatch batch, SpriteFont font, string text, Vector2 position, Color colorFG, Color colorBG)
         {
             BorderedString(batch, font, text, new Vector2(position.X - font.MeasureString(text).X / 2, position.Y), colorFG, colorBG);
         }
-        public static void BottomCenterBorderedString(SpriteBatch batch, SpriteFont font, string text, float x, float y, Color colorFG, Color colorBG)
+        public static void BottomCenterBorderedString(this SpriteBatch batch, SpriteFont font, string text, float x, float y, Color colorFG, Color colorBG)
         {
             BorderedString(batch, font, text, new Vector2(x - font.MeasureString(text).X / 2, y - font.MeasureString(text).Y), colorFG, colorBG);
         }
-        public static void BottomCenterBorderedString(SpriteBatch batch, SpriteFont font, string text, Vector2 position, Color colorFG, Color colorBG)
+        public static void BottomCenterBorderedString(this SpriteBatch batch, SpriteFont font, string text, Vector2 position, Color colorFG, Color colorBG)
         {
             BorderedString(batch, font, text, new Vector2(position.X - font.MeasureString(text).X / 2, position.Y - font.MeasureString(text).Y), colorFG, colorBG);
         }
-        public static void CenterBorderedStringXY(SpriteBatch batch, SpriteFont font, string text, float x, float y, Color colorFG, Color colorBG)
+        public static void CenterBorderedStringXY(this SpriteBatch batch, SpriteFont font, string text, float x, float y, Color colorFG, Color colorBG)
         {
             BorderedString(batch, font, text, new Vector2(x - font.MeasureString(text).X / 2, y - font.MeasureString(text).Y / 2), colorFG, colorBG);
         }
-        public static void CenterBorderedStringXY(SpriteBatch batch, SpriteFont font, string text, Vector2 position, Color colorFG, Color colorBG)
+        public static void CenterBorderedStringXY(this SpriteBatch batch, SpriteFont font, string text, Vector2 position, Color colorFG, Color colorBG)
         {
             BorderedString(batch, font, text, new Vector2(position.X - font.MeasureString(text).X / 2, position.Y - font.MeasureString(text).Y / 2), colorFG, colorBG);
         }
 
-        public static void String(SpriteBatch batch, SpriteFont font, string text, float x, float y, Color colorFG,
+        public static void String(this SpriteBatch batch, SpriteFont font, string text, float x, float y, Color colorFG,
                                   Style.HorizontalAlign horizontalAlign = Style.HorizontalAlign.Center,
                                   Style.VerticalAlign verticalAlign = Style.VerticalAlign.Middle,
                                  bool bordered = false, Color colorBG = default)
@@ -346,7 +346,7 @@ namespace Mugen.GFX
             }
 
         }
-        public static void String(SpriteBatch batch, SpriteFont font, string text, Vector2 position, Color colorFG,
+        public static void String(this SpriteBatch batch, SpriteFont font, string text, Vector2 position, Color colorFG,
                                   Style.HorizontalAlign horizontalAlign = Style.HorizontalAlign.Center,
                                   Style.VerticalAlign verticalAlign = Style.VerticalAlign.Middle,
                                  bool bordered = false, Color colorBG = default)
@@ -425,15 +425,15 @@ namespace Mugen.GFX
         }
         #endregion
 
-        public static void Line(SpriteBatch spriteBatch, float x1, float y1, float x2, float y2, Color color, float thickness = 1)
+        public static void Line(this SpriteBatch spriteBatch, float x1, float y1, float x2, float y2, Color color, float thickness = 1)
         {
             Line(spriteBatch, new Vector2(x1, y1), new Vector2(x2, y2), color, thickness);
         }
-        public static void Line(SpriteBatch batch, Line line, Color color, float thickness = 1)
+        public static void Line(this SpriteBatch batch, Line line, Color color, float thickness = 1)
         {
             Line(batch, line.A, line.B, color, thickness);
         }
-        public static void Line(SpriteBatch spriteBatch, Vector2 point1, Vector2 point2, Color color, float thickness)
+        public static void Line(this SpriteBatch spriteBatch, Vector2 point1, Vector2 point2, Color color, float thickness)
         {
             // calculate the distance between the two vectors
             float distance = Vector2.Distance(point1, point2);
@@ -443,7 +443,7 @@ namespace Mugen.GFX
 
             Line(spriteBatch, point1, distance, angle, color, thickness);
         }
-        public static void Line(SpriteBatch spriteBatch, Vector2 point, float length, float angle, Color color, float thickness = 1)
+        public static void Line(this SpriteBatch spriteBatch, Vector2 point, float length, float angle, Color color, float thickness = 1)
         {
             // stretch the pixel between the two vectors
             spriteBatch.Draw(_whitePixel,
@@ -457,11 +457,11 @@ namespace Mugen.GFX
                              0);
         }
 
-        public static void LineIn(SpriteBatch spriteBatch, float x1, float y1, float x2, float y2, Color color, float thickness = 1)
+        public static void LineIn(this SpriteBatch spriteBatch, float x1, float y1, float x2, float y2, Color color, float thickness = 1)
         {
             LineIn(spriteBatch, new Vector2(x1, y1), new Vector2(x2, y2), color, thickness);
         }
-        public static void LineIn(SpriteBatch spriteBatch, Vector2 point1, Vector2 point2, Color color, float thickness)
+        public static void LineIn(this SpriteBatch spriteBatch, Vector2 point1, Vector2 point2, Color color, float thickness)
         {
             // calculate the distance between the two vectors
             float distance = Vector2.Distance(point1, point2);
@@ -471,7 +471,7 @@ namespace Mugen.GFX
 
             LineIn(spriteBatch, point1, distance, angle, color, thickness);
         }
-        public static void LineIn(SpriteBatch spriteBatch, Vector2 point, float length, float angle, Color color, float thickness = 1)
+        public static void LineIn(this SpriteBatch spriteBatch, Vector2 point, float length, float angle, Color color, float thickness = 1)
         {
             // stretch the pixel between the two vectors
             spriteBatch.Draw(_whitePixel,
@@ -514,7 +514,7 @@ namespace Mugen.GFX
             }
 
         }
-        public static void Polygon(SpriteBatch spriteBatch, Vector2[] vertex, Color color, float thickness = 1, Vector2 offset = default)
+        public static void Polygon(this SpriteBatch spriteBatch, Vector2[] vertex, Color color, float thickness = 1, Vector2 offset = default)
         {
             if (vertex.Length > 0)
             {
@@ -526,7 +526,7 @@ namespace Mugen.GFX
                 Line(spriteBatch, vertex[vertex.Length - 1] + offset, vertex[0] + offset, color, thickness);
             }
         }
-        public static void PolyLine(SpriteBatch spriteBatch, Vector2[] vertex, Color color, float thickness = 1, Vector2 offset = default)
+        public static void PolyLine(this SpriteBatch spriteBatch, Vector2[] vertex, Color color, float thickness = 1, Vector2 offset = default)
         {
             if (vertex.Length > 0)
             {
@@ -537,7 +537,7 @@ namespace Mugen.GFX
             }
         }
 
-        public static void Ellipse(SpriteBatch batch, float x, float y, float rX, float rY, int side, Color color, float size = 1)
+        public static void Ellipse(this SpriteBatch batch, float x, float y, float rX, float rY, int side, Color color, float size = 1)
         {
             double angle = 0;
             float prevX = (float)Math.Cos(angle) * rX;
@@ -562,22 +562,22 @@ namespace Mugen.GFX
                 prevY = curY;
             }
         }
-        public static void Ellipse(SpriteBatch batch, Vector2 pos, Vector2 radius, int side, Color color, float size = 1)
+        public static void Ellipse(this SpriteBatch batch, Vector2 pos, Vector2 radius, int side, Color color, float size = 1)
         {
             Ellipse(batch, pos.X, pos.Y, radius.X, radius.Y, side, color, size);
         }
 
-        public static Rectangle FillRectangle(SpriteBatch batch, Rectangle rect, Color color)
+        public static Rectangle FillRectangle(this SpriteBatch batch, Rectangle rect, Color color)
         {
             batch.Draw(_whitePixel, rect, color);
             return rect;
         }
-        public static RectangleF FillRectangle(SpriteBatch batch, RectangleF rect, Color color)
+        public static RectangleF FillRectangle(this SpriteBatch batch, RectangleF rect, Color color)
         {
             batch.Draw(_whitePixel, new Rectangle((int)rect.X, (int)rect.Y, (int)rect.Width, (int)rect.Height), color);
             return rect;
         }
-        public static RectangleF FillRectangle(SpriteBatch spriteBatch, Vector2 location, Vector2 size, Color color, float angle)
+        public static RectangleF FillRectangle(this SpriteBatch spriteBatch, Vector2 location, Vector2 size, Color color, float angle)
         {
             spriteBatch.Draw(_whitePixel,
                              location,
@@ -591,7 +591,7 @@ namespace Mugen.GFX
 
             return new RectangleF(location.X, location.Y, size.X, size.Y);
         }
-        public static RectangleF FillRectangleCentered(SpriteBatch spriteBatch, Vector2 location, Vector2 size, Color color, float angle)
+        public static RectangleF FillRectangleCentered(this SpriteBatch spriteBatch, Vector2 location, Vector2 size, Color color, float angle)
         {
             spriteBatch.Draw(_whitePixel,
                              location,
@@ -605,30 +605,30 @@ namespace Mugen.GFX
 
             return new RectangleF(location.X - size.X/2, location.Y - size.Y/2, size.X, size.Y);
         }
-        public static RectangleF FillRectangle(SpriteBatch spriteBatch, Vector2 location, Vector2 size, Color color)
+        public static RectangleF FillRectangle(this SpriteBatch spriteBatch, Vector2 location, Vector2 size, Color color)
         {
             return FillRectangle(spriteBatch, location, size, color, 0.0f);
         }
-        public static RectangleF FillRectangle(SpriteBatch spriteBatch, float x, float y, float w, float h, Color color)
+        public static RectangleF FillRectangle(this SpriteBatch spriteBatch, float x, float y, float w, float h, Color color)
         {
             return FillRectangle(spriteBatch, new Vector2(x, y), new Vector2(w, h), color, 0.0f);
         }
 
-        public static RectangleF FillSquare(SpriteBatch spriteBatch, Vector2 location, float size, Color color)
+        public static RectangleF FillSquare(this SpriteBatch spriteBatch, Vector2 location, float size, Color color)
         {
             return FillRectangleCentered(spriteBatch, location, new Vector2(size), color, 0.0f);
         }
 
-        public static void Point(SpriteBatch spriteBatch, Vector2 location, float size, Color color)
+        public static void Point(this SpriteBatch spriteBatch, Vector2 location, float size, Color color)
         {
             Circle(spriteBatch, location, size, 4 + (int)size, color, size);
         }
-        public static void Point(SpriteBatch spriteBatch, float x, float y, float size, Color color)
+        public static void Point(this SpriteBatch spriteBatch, float x, float y, float size, Color color)
         {
             Circle(spriteBatch, new Vector2(x, y), size, 4 + (int)size, color, size);
         }
 
-        public static Vector2[] RectangleEx(SpriteBatch spriteBatch, Vector2 origin, RectangleF rect, Vector2 offset, Color color, float rotation = 0f, bool isRender = true, float thickness = 1f, bool isShowCenter = false)
+        public static Vector2[] RectangleEx(this SpriteBatch spriteBatch, Vector2 origin, RectangleF rect, Vector2 offset, Color color, float rotation = 0f, bool isRender = true, float thickness = 1f, bool isShowCenter = false)
         {
             Vector2[] vertexs = new Vector2[8];
 
@@ -652,7 +652,7 @@ namespace Mugen.GFX
             return shape._vertexsFinal;
 
         }
-        public static RectangleF Rectangle(SpriteBatch spriteBatch, RectangleF rect, Color color, float thickness = 1f)
+        public static RectangleF Rectangle(this SpriteBatch spriteBatch, RectangleF rect, Color color, float thickness = 1f)
         {
             // TODO: Figure out the pattern for the offsets required and then handle it in the line instead of here
             float offset = thickness / 2;
@@ -665,39 +665,39 @@ namespace Mugen.GFX
 
             return rect;
         }
-        public static RectangleF RectangleI(SpriteBatch spriteBatch, Rectangle rect, Color color, float thickness = 1f)
+        public static RectangleF RectangleI(this SpriteBatch spriteBatch, Rectangle rect, Color color, float thickness = 1f)
         {
             return Rectangle(spriteBatch, rect, color, thickness);
         }
-        public static RectangleF Rectangle(SpriteBatch spriteBatch, float x, float y, float width, float height, Color color, float thickness = 1f)
+        public static RectangleF Rectangle(this SpriteBatch spriteBatch, float x, float y, float width, float height, Color color, float thickness = 1f)
         {
             return Rectangle(spriteBatch, new RectangleF(x, y, width, height), color, thickness);
         }
-        public static RectangleF Rectangle(SpriteBatch spriteBatch, Vector2 location, Vector2 size, Color color, float thickness = 1f)
+        public static RectangleF Rectangle(this SpriteBatch spriteBatch, Vector2 location, Vector2 size, Color color, float thickness = 1f)
         {
             return Rectangle(spriteBatch, new RectangleF((int)location.X, (int)location.Y, (int)size.X, (int)size.Y), color, thickness);
         }
-        public static RectangleF RectangleCentered(SpriteBatch spriteBatch, Vector2 location, Vector2 size, Color color, float thickness = 1f)
+        public static RectangleF RectangleCentered(this SpriteBatch spriteBatch, Vector2 location, Vector2 size, Color color, float thickness = 1f)
         {
             RectangleF rect = new RectangleF((int)location.X - size.X / 2, (int)location.Y - size.Y / 2, (int)size.X, (int)size.Y);
             Rectangle(spriteBatch, rect, color, thickness);
             return rect;
         }
-        public static void Circle(SpriteBatch spriteBatch, Vector2 center, float radius, int sides, Color color, float thickness = 1f)
+        public static void Circle(this SpriteBatch spriteBatch, Vector2 center, float radius, int sides, Color color, float thickness = 1f)
         {
             Points(spriteBatch, center, CreateCircle(radius, sides), color, thickness);
         }
-        public static void Circle(SpriteBatch spriteBatch, float x, float y, float radius, int sides, Color color, float thickness = 1f)
+        public static void Circle(this SpriteBatch spriteBatch, float x, float y, float radius, int sides, Color color, float thickness = 1f)
         {
             Points(spriteBatch, new Vector2(x, y), CreateCircle(radius, sides), color, thickness);
         }
-        public static void Arc(SpriteBatch spriteBatch, Vector2 center, float radius, int sides, float startingAngle, float radians, Color color, float thickness)
+        public static void Arc(this SpriteBatch spriteBatch, Vector2 center, float radius, int sides, float startingAngle, float radians, Color color, float thickness)
         {
             List<Vector2> arc = CreateArc(radius, sides, startingAngle, radians);
             //List<Vector2> arc = CreateArc2(radius, sides, startingAngle, degrees);
             Points(spriteBatch, center, arc, color, thickness);
         }
-        public static RectangleF RoundedRectangle(SpriteBatch spriteBatch, RectangleF rect, float radius, int sides, Color color, float thickness = 1f)
+        public static RectangleF RoundedRectangle(this SpriteBatch spriteBatch, RectangleF rect, float radius, int sides, Color color, float thickness = 1f)
         {
             Arc(spriteBatch, rect.TopLeft + Vector2.One * radius, radius, sides, Geo.RAD_180, Geo.RAD_90, color, thickness);
             Line(spriteBatch, rect.TopLeft + Vector2.UnitX * radius, rect.TopRight - Vector2.UnitX * radius, color, thickness);
@@ -710,7 +710,7 @@ namespace Mugen.GFX
 
             return rect;
         }
-        public static RectangleF BevelledRectangle(SpriteBatch spriteBatch, RectangleF rect, Vector2 bevel, Color color, float thickness = 1f)
+        public static RectangleF BevelledRectangle(this SpriteBatch spriteBatch, RectangleF rect, Vector2 bevel, Color color, float thickness = 1f)
         {
             Line(spriteBatch, rect.TopLeft + Vector2.UnitY * bevel.Y, rect.TopLeft + Vector2.UnitX * bevel.X, color, thickness);
             Line(spriteBatch, rect.TopLeft + Vector2.UnitX * bevel.X, rect.TopRight - Vector2.UnitX * bevel.X, color, thickness);
@@ -724,24 +724,24 @@ namespace Mugen.GFX
             return rect;
         }
 
-        public static void PutPixel(SpriteBatch spriteBatch, float x, float y, Color color)
+        public static void PutPixel(this SpriteBatch spriteBatch, float x, float y, Color color)
         {
             PutPixel(spriteBatch, new Vector2(x, y), color);
         }
-        public static void PutPixel(SpriteBatch spriteBatch, Vector2 position, Color color)
+        public static void PutPixel(this SpriteBatch spriteBatch, Vector2 position, Color color)
         {
             spriteBatch.Draw(_whitePixel, position, color);
         }
 
-        public static void Bar(SpriteBatch spriteBatch, float x, float y, float value, float height, Color color)
+        public static void Bar(this SpriteBatch spriteBatch, float x, float y, float value, float height, Color color)
         {
             Line(spriteBatch, x, y, x + value, y, color, height);
         }
-        public static void Bar(SpriteBatch spriteBatch, Vector2 position, float value, float height, Color color)
+        public static void Bar(this SpriteBatch spriteBatch, Vector2 position, float value, float height, Color color)
         {
             Line(spriteBatch, position.X, position.Y, position.X + value, position.Y, color, height);
         }
-        public static void BarLines(SpriteBatch spriteBatch, Vector2 position, float value, float height, Color color, float thickness = 1f)
+        public static void BarLines(this SpriteBatch spriteBatch, Vector2 position, float value, float height, Color color, float thickness = 1f)
         {
             float h = height / 2;
             Line(spriteBatch, position.X, position.Y - h, position.X + value, position.Y - h, color, thickness);
@@ -749,7 +749,7 @@ namespace Mugen.GFX
             Line(spriteBatch, position.X + value, position.Y - h, position.X + value, position.Y + h, color, thickness);
             Line(spriteBatch, position.X, position.Y - h, position.X, position.Y + h, color, thickness);
         }
-        public static void Triangle(SpriteBatch batch, float x1, float y1, float x2, float y2, float x3, float y3, Color color, float size = 1)
+        public static void Triangle(this SpriteBatch batch, float x1, float y1, float x2, float y2, float x3, float y3, Color color, float size = 1)
         {
             Vector2 p1 = new Vector2(x1, y1);
             Vector2 p2 = new Vector2(x2, y2);
@@ -760,16 +760,16 @@ namespace Mugen.GFX
             Line(batch, p3, p1, color, size);
         }
 
-        public static void Sight(SpriteBatch batch, float x, float y, int screenW, int screenH, Color color, float thickness = 1f)
+        public static void Sight(this SpriteBatch batch, float x, float y, int screenW, int screenH, Color color, float thickness = 1f)
         {
             Line(batch, x + .5f, 0, x + .5f, screenH, color, thickness);
             Line(batch, 0, y + .5f, screenW, y + .5f, color, thickness);
         }
-        public static void Sight(SpriteBatch batch, Vector2 position, int screenW, int screenH, Color color, float thickness = 1f)
+        public static void Sight(this SpriteBatch batch, Vector2 position, int screenW, int screenH, Color color, float thickness = 1f)
         {
             Sight(batch, position.X, position.Y, screenW, screenH, color, thickness);
         }
-        public static void Grid(SpriteBatch batch, float x, float y, float gridW, float gridH, float cellW, float cellH, Color color, float thickness = 1f)
+        public static void Grid(this SpriteBatch batch, float x, float y, float gridW, float gridH, float cellW, float cellH, Color color, float thickness = 1f)
         {
             for (int i = 0; i < Math.Floor(gridW / cellW) + 1; i++)
             {
@@ -787,11 +787,11 @@ namespace Mugen.GFX
                     color, thickness);
             }
         }
-        public static void Grid(SpriteBatch batch, Vector2 position, float gridW, float gridH, float cellW, float cellH, Color color, float thickness = 1f)
+        public static void Grid(this SpriteBatch batch, Vector2 position, float gridW, float gridH, float cellW, float cellH, Color color, float thickness = 1f)
         {
             Grid(batch, position.X, position.Y, gridW, gridH, cellW, cellH, color, thickness);
         }
-        public static void Mosaic(SpriteBatch batch, Rectangle rectView, float x, float y, int repX, int repY, Texture2D bitmap, Color color)
+        public static void Mosaic(this SpriteBatch batch, Rectangle rectView, float x, float y, int repX, int repY, Texture2D bitmap, Color color)
         {
             float tileW = bitmap.Width;
             float tileH = bitmap.Height;
@@ -816,7 +816,7 @@ namespace Mugen.GFX
                 }
             }
         }
-        public static void Mosaic(SpriteBatch batch, Rectangle rectView, float x, float y, int repX, int repY, Texture2D bitmap, float tileX, float tileY, float tileW, float tileH, Color color)
+        public static void Mosaic(this SpriteBatch batch, Rectangle rectView, float x, float y, int repX, int repY, Texture2D bitmap, float tileX, float tileY, float tileW, float tileH, Color color)
         {
 
             for (int i = 0; i < repX; ++i)
@@ -839,7 +839,7 @@ namespace Mugen.GFX
                 }
             }
         }
-        public static void Mosaic(SpriteBatch batch, Rectangle rectView, float x, float y, int repX, int repY, Texture2D bitmap, Rectangle rect, Color color)
+        public static void Mosaic(this SpriteBatch batch, Rectangle rectView, float x, float y, int repX, int repY, Texture2D bitmap, Rectangle rect, Color color)
         {
 
             for (int i = 0; i < repX; ++i)
