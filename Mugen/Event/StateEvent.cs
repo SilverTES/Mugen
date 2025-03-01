@@ -22,11 +22,11 @@ namespace Mugen.Event
         /// <summary>
         /// Clear all the events previous status
         /// </summary>
-        public void BeginSetEvents()
-        {
-            for (int i = 0; i < _events.Length; ++i)
-                _prevEvents[i] = _events[i];
-        }
+        //public void BeginSetEvents()
+        //{
+        //    for (int i = 0; i < _events.Length; ++i)
+        //        _prevEvents[i] = _events[i];
+        //}
         /// <summary>
         /// Set the event boolean
         /// </summary>
@@ -34,6 +34,7 @@ namespace Mugen.Event
         /// <param name="isEvent"> boolean when the event is activate </param>
         public void SetEvent(int idEvent, bool isEvent)
         {
+            _prevEvents[idEvent] = _events[idEvent];
             _events[idEvent] = isEvent;
         }
         /// <summary>
