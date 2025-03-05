@@ -7,6 +7,7 @@ namespace Mugen.Event
         float[] _timers;
         float[] _tics;
         bool[] _on;
+        bool[] _repeat;
 
         float[] _factorTimes;
 
@@ -16,6 +17,7 @@ namespace Mugen.Event
             _timers = new float[nbTimer];
             _tics = new float[nbTimer];
             _on = new bool[nbTimer];
+            _repeat = new bool[nbTimer];
 
             _factorTimes = new float[nbTimer];
 
@@ -33,9 +35,10 @@ namespace Mugen.Event
             return 1f / (float)TimeToFrame(hours, minutes, seconds);
         }
 
-        public void SetTimer(int idTimer, float tic)
+        public void SetTimer(int idTimer, float tic, bool repeat = false)
         {
             _tics[idTimer] = tic;
+            _repeat[idTimer] = repeat;
         }
         public void SetTimeFactor(int idTimer, float timeFactor = 1f)
         {
@@ -89,6 +92,9 @@ namespace Mugen.Event
                 {
                     _on[i] = true;
                     _timers[i] = 1f;
+
+                    if (_repeat[i])
+                        StartTimer(i);
                 }
                 else
                 {
