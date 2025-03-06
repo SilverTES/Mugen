@@ -367,10 +367,10 @@ namespace Mugen.GFX
                 LineIn(spriteBatch, points[i - 1] + position, points[i] + position, color, thickness);
             }
         }
-        private static List<Vector2> CreateCircle(double radius, int sides)
+        private static List<Vector2> CreateCircle(double radius, int sides, float radians = 0)
         {
             // Look for a cached version of this circle
-            String circleKey = radius + "x" + sides;
+            String circleKey = radius + "x" + sides + ":" + radians;
             if (circleCache.ContainsKey(circleKey))
             {
                 return circleCache[circleKey];
@@ -383,11 +383,11 @@ namespace Mugen.GFX
 
             for (double theta = 0.0; theta < max; theta += step)
             {
-                vectors.Add(new Vector2((float)(radius * Math.Cos(theta)), (float)(radius * Math.Sin(theta))));
+                vectors.Add(new Vector2((float)(radius * Math.Cos(theta + radians)), (float)(radius * Math.Sin(theta + radians))));
             }
 
             // then add the first vector again so it's a complete loop
-            vectors.Add(new Vector2((float)(radius * Math.Cos(0)), (float)(radius * Math.Sin(0))));
+            vectors.Add(new Vector2((float)(radius * Math.Cos(radians)), (float)(radius * Math.Sin(radians))));
 
             // Cache this circle so that it can be quickly drawn next time
             circleCache.Add(circleKey, vectors);
@@ -683,13 +683,13 @@ namespace Mugen.GFX
             Rectangle(spriteBatch, rect, color, thickness);
             return rect;
         }
-        public static void Circle(this SpriteBatch spriteBatch, Vector2 center, float radius, int sides, Color color, float thickness = 1f)
+        public static void Circle(this SpriteBatch spriteBatch, Vector2 center, float radius, int sides, Color color, float thickness = 1f, float radians = 0f)
         {
-            Points(spriteBatch, center, CreateCircle(radius, sides), color, thickness);
+            Points(spriteBatch, center, CreateCircle(radius, sides, radians), color, thickness);
         }
-        public static void Circle(this SpriteBatch spriteBatch, float x, float y, float radius, int sides, Color color, float thickness = 1f)
+        public static void Circle(this SpriteBatch spriteBatch, float x, float y, float radius, int sides, Color color, float thickness = 1f, float radians = 0f)
         {
-            Points(spriteBatch, new Vector2(x, y), CreateCircle(radius, sides), color, thickness);
+            Points(spriteBatch, new Vector2(x, y), CreateCircle(radius, sides, radians), color, thickness);
         }
         public static void Arc(this SpriteBatch spriteBatch, Vector2 center, float radius, int sides, float startingAngle, float radians, Color color, float thickness)
         {
