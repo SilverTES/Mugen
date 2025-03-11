@@ -42,6 +42,61 @@ namespace Mugen.GFX
 
     }
 
+    public struct HSV
+    {
+        public static Color ToRadRGB(float h = Geo.RAD_360, float s = 1.0f, float v = 1.0f)
+        {
+            return ToRGB((float)Geo.RadToDeg(h), s, v);
+        }
+        public static Color ToRGB(float h = 360f, float s = 1.0f, float v = 1.0f)
+        {
+            // Normalisation des entrées
+            h = h % 360f; // Assure que H reste entre 0 et 360
+            s = Math.Clamp(s, 0f, 1f); // S entre 0 et 1
+            v = Math.Clamp(v, 0f, 1f); // V entre 0 et 1
+
+            float r = 0, g = 0, b = 0;
+
+            if (s == 0) // Cas où la couleur est grise (saturation = 0)
+            {
+                r = g = b = v;
+            }
+            else
+            {
+                // Calcul des secteurs et des valeurs intermédiaires
+                int sector = (int)(h / 60f); // Divise le cercle en 6 secteurs (0 à 5)
+                float fraction = (h / 60f) - sector; // Partie décimale dans le secteur
+                float p = v * (1 - s);
+                float q = v * (1 - s * fraction);
+                float t = v * (1 - s * (1 - fraction));
+
+                // Attribution des valeurs RGB selon le secteur
+                switch (sector)
+                {
+                    case 0: // Rouge → Jaune
+                        r = v; g = t; b = p; break;
+                    case 1: // Jaune → Vert
+                        r = q; g = v; b = p; break;
+                    case 2: // Vert → Cyan
+                        r = p; g = v; b = t; break;
+                    case 3: // Cyan → Bleu
+                        r = p; g = q; b = v; break;
+                    case 4: // Bleu → Magenta
+                        r = t; g = p; b = v; break;
+                    case 5: // Magenta → Rouge
+                        r = v; g = p; b = q; break;
+                }
+            }
+
+            // Conversion en valeurs RGB (0-255)
+            return new Color(
+                (byte)(r * 255f),
+                (byte)(g * 255f),
+                (byte)(b * 255f)
+            );
+        }
+    }
+
     public static class GFX
     {
 
