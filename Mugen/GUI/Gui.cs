@@ -184,10 +184,6 @@ namespace Mugen.GUI
 
         }
 
-
-
-
-
         public enum Fill
         {
             NONE,
@@ -210,19 +206,40 @@ namespace Mugen.GUI
         public class Space
         {
             #region Attributes
-            [JsonProperty("top")] public float _top = 0;
-            [JsonProperty("bottom")] public float _bottom = 0;
-            [JsonProperty("left")] public float _left = 0;
-            [JsonProperty("right")] public float _right = 0;
+            [JsonProperty("Top")] public float Top = 0;
+            [JsonProperty("Bottom")] public float Bottom = 0;
+            [JsonProperty("Left")] public float Left = 0;
+            [JsonProperty("Right")] public float Right = 0;
             #endregion
 
             public Space(float space)
             {
-                _top = space;
-                _bottom = space;
-                _left = space;
-                _right = space;
+                Top = space;
+                Bottom = space;
+                Left = space;
+                Right = space;
             }
+            public Space(float top, float bottom, float left, float right)
+            {
+                Top = top;
+                Bottom = bottom;
+                Left = left;
+                Right = right;
+            }
+            public static Space operator +(Space A, Space B)
+            {
+                return new Space(A.Top + B.Top, A.Bottom + B.Bottom, A.Left + B.Left, A.Right + B.Right);
+            }
+            public static Space operator *(Space A, Space B)
+            {
+                return new Space(A.Top * B.Top, A.Bottom * B.Bottom, A.Left * B.Left, A.Right * B.Right);
+            }
+            public static Space operator *(Space A, float B)
+            {
+                return new Space(A.Top * B, A.Bottom * B, A.Left * B, A.Right * B);
+            }
+            public static Space Zero => new(0, 0, 0, 0);
+            public static Space One => new(1, 1, 1, 1);
         }
 
         #region Properties
@@ -833,10 +850,10 @@ namespace Mugen.GUI
                     AbsRectF,
                     new RectangleF
                     (
-                        -_style._border._left,
-                        -_style._border._top,
-                        _style._border._left + _style._border._right,
-                        _style._border._top + _style._border._bottom
+                        -_style._border.Left,
+                        -_style._border.Top,
+                        _style._border.Left + _style._border.Right,
+                        _style._border.Top + _style._border.Bottom
                     )
                 );
                 _style._rectPadding = RectangleF.Add
@@ -844,10 +861,10 @@ namespace Mugen.GUI
                     AbsRectF,
                     new RectangleF
                     (
-                        _style._padding._left,
-                        _style._padding._top,
-                        -_style._padding._right * 2,
-                        -_style._padding._bottom * 2
+                        _style._padding.Left,
+                        _style._padding.Top,
+                        -_style._padding.Right * 2,
+                        -_style._padding.Bottom * 2
                     )
                 );
 
