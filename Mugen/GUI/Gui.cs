@@ -360,8 +360,8 @@ namespace Mugen.GUI
         }
         public Container Insert(Node node)
         {
-            RefreshChildContainers();
             _nodes.Add(node);
+            RefreshChildContainers();
             return this;
         }
         private RectangleF GetRect(Position direction)
