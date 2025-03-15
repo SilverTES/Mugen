@@ -670,6 +670,21 @@ namespace Mugen.Core
                 }
             return nodes;
         }
+        public List<T> GroupOf<T>() where T : Node
+        {
+            List<T> nodes = new List<T>();
+            if (_childs.Count() > 0)
+                for (int i = 0; i < _childs.Count(); ++i)
+                {
+                    if (null != _childs.At(i))
+                        if (_childs.At(i)!._type == UID.Get<T>())
+                        {
+                            var child = (T)_childs.At(i)!;
+                            nodes.Add(child);
+                        }
+                }
+            return nodes;
+        }
         public List<Node> GroupOf(int[] types)
         {
             List<Node> nodes = new List<Node>();
