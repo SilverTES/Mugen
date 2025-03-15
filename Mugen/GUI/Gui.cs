@@ -340,7 +340,146 @@ namespace Mugen.GUI
     //    }
 
     //}
+    public class Container : Node
+    {
+        public RectangleF Rect => GetRect(_direction);
 
+        Position _direction;
+
+        List<Node> _nodes = [];
+
+        Style.Space _margin; // container space
+        Style.Space _padding; // node space
+
+        public Container(Style.Space margin, Style.Space padding, Position direction = Position.HORIZONTAL)
+        {
+            _type = UID.Get<Container>();
+            _margin = margin;
+            _padding = padding;
+            _direction = direction;
+        }
+        public Container Insert(Node node)
+        {
+            RefreshChildContainers();
+            _nodes.Add(node);
+            return this;
+        }
+        private RectangleF GetRect(Position direction)
+        {
+            // Determine Container Rect Size ! 
+            if (direction == Position.HORIZONTAL)
+            {
+                float width = 0;
+                float height = 0;
+
+                for (int i = 0; i < _nodes.Count; i++)
+                {
+                    width += _padding.Left + _nodes[i]._rect.Width + _padding.Right;
+
+                    float testHeight = _padding.Top + _nodes[i]._rect.Height + _padding.Bottom;
+
+                    if (height < testHeight)
+                        height = testHeight;
+                }
+
+                _rect.Width = _margin.Left + width + _margin.Right;
+                _rect.Height = _margin.Top + height + _margin.Bottom;
+            }
+            else
+            {
+                float width = 0;
+                float height = 0;
+
+                for (int i = 0; i < _nodes.Count; i++)
+                {
+                    height += _padding.Top + _nodes[i]._rect.Height + _padding.Bottom;
+
+                    float testWidth = _padding.Left + _nodes[i]._rect.Width + _padding.Right;
+
+                    if (width < testWidth)
+                        width = testWidth;
+                }
+
+                _rect.Width = _margin.Left + width + _margin.Right;
+                _rect.Height = _margin.Top + height + _margin.Bottom;
+            }
+
+            return _rect;
+        }
+        private void RefreshNode(Position direction)
+        {
+            // Set Nodes Position !
+            if (direction == Position.HORIZONTAL)
+            {
+                for (int i = 0; i < _nodes.Count; i++)
+                {
+                    if (i == 0)
+                    {
+                        _nodes[i]._x = _margin.Left + _padding.Left + _rect.X;
+                    }
+                    if (i > 0)
+                    {
+                        _nodes[i]._x = _nodes[i - 1]._x + _nodes[i - 1]._rect.Width + _padding.Right + _padding.Left;
+                    }
+
+                    _nodes[i]._y = _rect.Y + (_rect.Height - _nodes[i]._rect.Height) / 2;
+
+                    _nodes[i].UpdateRect();
+                }
+            }
+            else
+            {
+                for (int i = 0; i < _nodes.Count; i++)
+                {
+                    if (i == 0)
+                    {
+                        _nodes[i]._y = _margin.Top + _padding.Top + _rect.Y;
+                    }
+                    if (i > 0)
+                    {
+                        _nodes[i]._y = _nodes[i - 1]._y + _nodes[i - 1]._rect.Height + _padding.Bottom + _padding.Top;
+                    }
+
+                    _nodes[i]._x = _rect.X + (_rect.Width - _nodes[i]._rect.Width) / 2;
+
+                    _nodes[i].UpdateRect();
+                }
+            }
+        }
+        public Container Refresh()
+        {
+            Refresh(_direction);
+            return this;
+        }
+        public Container Refresh(Position direction)
+        {
+            _rect = GetRect(direction);
+            RefreshNode(direction);
+
+            RefreshChildContainers();
+
+            return this;
+        }
+        private void RefreshChildContainers()
+        {
+            for (int i = 0; i < _nodes.Count; i++)
+            {
+                if (_nodes[i] != null)
+                {
+                    var node = _nodes[i];
+
+                    if (node._type == UID.Get<Container>())
+                        ((Container)_nodes[i]).Refresh();
+                }
+            }
+        }
+
+        public void DrawDebug(SpriteBatch batch, Color color, float thickness = 1f)
+        {
+            batch.Rectangle(_rect, color, thickness);
+        }
+
+    }
     public class Skin
     {
         public Rectangle _rect; // rect of the frame pattern
