@@ -1249,7 +1249,7 @@ namespace Mugen.Core
             }
             return this;
         }
-        public Node DrawChilds(SpriteBatch batch, GameTime gameTime, int indexLayer = 0)
+        public Node DrawChilds(SpriteBatch batch, GameTime gameTime, int indexLayer)
         {
             for (int index = 0; index < _childs.Count(); ++index)
             {

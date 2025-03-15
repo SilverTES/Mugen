@@ -1072,7 +1072,7 @@ namespace Mugen.GUI
                 _resize.Draw(batch, _mouse, _style._font);
 
                 if (_isShowContent)
-                    DrawChilds(batch, gameTime);
+                    DrawChilds(batch, gameTime, indexLayer);
 
                 return this;
             }
