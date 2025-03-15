@@ -2,13 +2,14 @@
 using Microsoft.Xna.Framework;
 using System;
 using System.Windows.Forms;
+using System.Security.Cryptography.X509Certificates;
 
 namespace Mugen.Core
 {
     public static class ScreenManager
     {
-        public static RenderTarget2D[]? _layers;
-
+        public static List<RenderTarget2D> _layers = [];
+        public static int NbLayers => _layers.Count;
         //private static WindowManager? _windowManager;
         private static SpriteBatch? _spriteBatch;
 
@@ -26,14 +27,11 @@ namespace Mugen.Core
 
         private static Stack<Node> _stackScreen = new Stack<Node>();
 
-        private static List<int>? _layersOrder = null;
+        private static List<int> _layersOrder = [];
 
         public static RenderTarget2D? GetLayer(int indexLayer)
         {
-            if (_layers == null)
-                return null;
-
-            if (indexLayer < 0 || indexLayer > _layers.Length)
+            if (indexLayer < 0 || indexLayer > _layers.Count)
                 return null;
 
             return _layers[indexLayer];
@@ -58,7 +56,7 @@ namespace Mugen.Core
 
             return _stackScreen.Peek();
         }
-        public static void Init(Node initialScreen, int nbLayers, List<int>? layersOrder = null)
+        public static void Init(Node initialScreen, int nbLayers, List<int> layersOrder)
         {
             //_windowManager = windowManager;
             _spriteBatch = WindowManager._batch;
@@ -67,12 +65,12 @@ namespace Mugen.Core
             _showScreen = initialScreen;
             _prevScreen = initialScreen;
 
-            _layers = new RenderTarget2D[nbLayers];
+            //_layers = new RenderTarget2D[nbLayers];
             _layersOrder = layersOrder;
 
-            for (int i = 0; i < _layers.Length; i++)
+            for (int i = 0; i < layersOrder.Count; i++)
             {
-                _layers[i] = new(WindowManager.GDManager!.GraphicsDevice, WindowManager.GetScreenSize().X, WindowManager.GetScreenSize().Y);
+                _layers.Add(new(WindowManager.GDManager!.GraphicsDevice, WindowManager.GetScreenSize().X, WindowManager.GetScreenSize().Y));
             }
 
         }
@@ -86,7 +84,10 @@ namespace Mugen.Core
         {
             _layersOrder = layersOrder;
         }
-
+        public static List<int> GetLayersOrder()
+        {
+            return _layersOrder!;
+        }
         public static Node CurScreen()
         {
             return _curScreen;
@@ -142,7 +143,7 @@ namespace Mugen.Core
         }
         public static void BeginDraw(int indexLayer = -1, SpriteSortMode sortMode = SpriteSortMode.Deferred, BlendState? blendState = null, SamplerState? samplerState = null, DepthStencilState? depthStencilState = null, RasterizerState? rasterizerState = null, Effect? effect = null, Matrix? transformMatrix = null)
         {
-            if (indexLayer < 0 || indexLayer >= _layers!.Count())
+            if (indexLayer < 0 || indexLayer >= _layers.Count)
             {
                 _spriteBatch!.GraphicsDevice.SetRenderTarget(null);
                 _spriteBatch.Begin(sortMode, blendState, samplerState, depthStencilState, rasterizerState, effect, transformMatrix);
@@ -175,14 +176,14 @@ namespace Mugen.Core
         }
         public static void ShowLayer(int indexLayer, Color color)
         {
-            if (indexLayer < 0 || indexLayer >= _layers!.Count())
+            if (indexLayer < 0 || indexLayer >= _layers.Count)
                 return;
 
-            _spriteBatch!.Draw(_layers![indexLayer], WindowManager.StrechtingRect(), color);
+            _spriteBatch!.Draw(_layers[indexLayer], WindowManager.StrechtingRect(), color);
         }
         public static void DrawScreen(GameTime gameTime, SpriteSortMode sortMode = SpriteSortMode.Deferred, BlendState? blendState = null, SamplerState? samplerState = null, DepthStencilState? depthStencilState = null, RasterizerState? rasterizerState = null, Effect? effect = null, Matrix? transformMatrix = null)
         {
-            for (int i = 0; i < _layersOrder!.Count; i++)
+            for (int i = 0; i < _layersOrder.Count; i++)
             {
                 BeginDraw(_layersOrder[i], sortMode, blendState, samplerState, depthStencilState, rasterizerState, effect, transformMatrix);
                 DrawLayer(_layersOrder[i], gameTime);
@@ -192,7 +193,7 @@ namespace Mugen.Core
         public static void ShowScreen(GameTime gameTime, SpriteSortMode sortMode = SpriteSortMode.Deferred, BlendState? blendState = null, SamplerState? samplerState = null, DepthStencilState? depthStencilState = null, RasterizerState? rasterizerState = null, Effect? effect = null, Matrix? transformMatrix = null)
         {
             BeginShow(sortMode, blendState, samplerState, depthStencilState, rasterizerState, effect, transformMatrix);
-            for (int i = 0; i < _layersOrder!.Count; i++)
+            for (int i = 0; i < _layersOrder.Count; i++)
             {
                 ShowLayer(_layersOrder[i], Color.White);
             }
