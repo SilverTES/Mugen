@@ -73,6 +73,9 @@ namespace Mugen.Core
         public Node? _master = null;
         public Node? _original = null;
 
+        //AI
+        public int _passLevel = 1;
+
         // World2D
         public float _x;
         public float _y;
