@@ -364,6 +364,18 @@ namespace Mugen.GUI
             RefreshChildContainers();
             return this;
         }
+        public Container Insert(int index, Node node)
+        {
+            _nodes.Insert(index, node);
+            RefreshChildContainers();
+            return this;
+        }
+        public Container Remove(Node node)
+        {
+            _nodes.Remove(node);
+            RefreshChildContainers();
+            return this;
+        }
         private RectangleF GetRect(Position direction)
         {
             // Determine Container Rect Size ! 
