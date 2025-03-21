@@ -324,14 +324,14 @@ namespace Mugen.Core
 
             return _grid[GetIndex(x, y)];
         }
-        public bool Set(int x, int y, T value)
+        public T Set(int x, int y, T value)
         {
             if (!IsInGrid(x, y))
-                return false;
+                return default!;
 
             _grid[GetIndex(x, y)] = value;
 
-            return true;
+            return value;
         }
         public void Fill(T value)
         {
@@ -347,7 +347,6 @@ namespace Mugen.Core
         {
             if (width < 1 || height < 1)
                 return false;
-
 
             T[] newGrid = new T[width * height];
 
