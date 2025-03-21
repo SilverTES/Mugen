@@ -294,7 +294,99 @@ namespace Mugen.Core
         }
     }
 
+    public class Grid2D<T>
+    {
+        T[] _grid;
+        int _width;
+        int _height;
+        public int Width => _width;
+        public int Height => _height;
+        public T[] Grid => _grid;
 
+        public Grid2D(int width, int height)
+        {
+            _width = width;
+            _height = height;
+            _grid = new T[width * height];
+        }
+        public int GetIndex(int x, int y)
+        {
+            return x + y * _width;
+        }
+        public bool IsInGrid(int x, int y)
+        {
+            return !(x < 0 || x > _width - 1 || y < 0 || y > _height - 1);
+        }
+        public T? Get(int x, int y)
+        {
+            if (!IsInGrid(x, y))
+                return default;
+
+            return _grid[GetIndex(x, y)];
+        }
+        public bool Set(int x, int y, T value)
+        {
+            if (!IsInGrid(x, y))
+                return false;
+
+            _grid[GetIndex(x, y)] = value;
+
+            return true;
+        }
+        public void Fill(T value)
+        {
+            for (int x = 0; x < _width; x++)
+            {
+                for (int y = 0; y < _height; y++)
+                {
+                    Set(x, y, value);
+                }
+            }
+        }
+        public bool Resize(int width, int height, int destX = 0, int destY = 0)
+        {
+            if (width < 1 || height < 1)
+                return false;
+
+
+            T[] newGrid = new T[width * height];
+
+            for (int x = 0; x < width; x++)
+            {
+                for (int y = 0; y < height; y++)
+                {
+                    newGrid[x + y * width] = Get(x - destX, y - destY)!;
+                }
+            }
+
+            _grid = newGrid;
+
+            _width = width;
+            _height = height;
+
+            return true;
+        }
+
+        public override string ToString()
+        {
+            string str = "\n";
+
+            for (int row = 0; row < _height; row++)
+            {
+                for (int col = 0; col < _width; col++)
+                {
+                    str += $"{Get(col, row)}.";
+                }
+                str += "\n";
+            }
+
+            return str;
+        }
+
+
+    }
+
+    [Obsolete]
     public class List2D<T> where T : new()
     {
         public int _width { get; private set; }
