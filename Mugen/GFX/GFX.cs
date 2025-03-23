@@ -480,6 +480,65 @@ namespace Mugen.GFX
         }
         #endregion
 
+        // Méthode améliorée pour une ligne avec antialiasing plus prononcé
+        public static Texture2D CreateLineTextureAA(GraphicsDevice graphicsDevice, int length, int thickness, float aaThickness)
+        {
+            // Augmenter la hauteur pour inclure une marge suffisante pour l'AA
+            int textureHeight = thickness + (int)(aaThickness * 2) + 2; // Marge supplémentaire
+            Texture2D line = new Texture2D(graphicsDevice, length, textureHeight);
+            Color[] data = new Color[length * textureHeight];
+
+            float halfThickness = thickness / 2f;
+            float centerY = textureHeight / 2f;
+
+            for (int x = 0; x < length; x++)
+            {
+                for (int y = 0; y < textureHeight; y++)
+                {
+                    int index = x + y * length;
+                    float distanceFromCenter = Math.Abs(y - centerY);
+
+                    // Calcul d'un alpha plus doux avec une courbe quadratique
+                    float alpha;
+                    if (distanceFromCenter <= halfThickness)
+                    {
+                        alpha = 1f; // Plein centre
+                    }
+                    else if (distanceFromCenter <= halfThickness + aaThickness)
+                    {
+                        float t = (distanceFromCenter - halfThickness) / aaThickness;
+                        alpha = 1f - t * t; // Courbe quadratique pour un dégradé plus naturel
+                    }
+                    else
+                    {
+                        alpha = 0f; // Transparent à l'extérieur
+                    }
+
+                    data[index] = Color.White * alpha;
+                }
+            }
+
+            line.SetData(data);
+            return line;
+        }
+        public static void LineTexture(this SpriteBatch spriteBatch, Texture2D texLine, Vector2 start, Vector2 end, float thickness, Color color)
+        {
+            Vector2 delta = end - start;
+            float length = delta.Length();
+            float rotation = (float)Math.Atan2(delta.Y, delta.X);
+
+            spriteBatch.Draw(
+                texLine,
+                start,
+                null,
+                color,
+                rotation,
+                new Vector2(0, texLine.Height / 2f),
+                new Vector2(length / texLine.Width, thickness / texLine.Height),
+                SpriteEffects.None,
+                0f);
+        }
+
         public static void Line(this SpriteBatch spriteBatch, float x1, float y1, float x2, float y2, Color color, float thickness = 1)
         {
             Line(spriteBatch, new Vector2(x1, y1), new Vector2(x2, y2), color, thickness);
@@ -590,6 +649,91 @@ namespace Mugen.GFX
                     Line(spriteBatch, vertex[i] + offset, vertex[i + 1] + offset, color, thickness);
                 }
             }
+        }
+        public static void FilledCircle(this SpriteBatch spriteBatch, Vector2 center, float radius, Color color)
+        {
+            // Pour chaque pixel dans un carré entourant le cercle
+            for (int x = (int)(center.X - radius); x <= center.X + radius; x++)
+            {
+                for (int y = (int)(center.Y - radius); y <= center.Y + radius; y++)
+                {
+                    // Calculer la distance depuis le centre
+                    Vector2 position = new Vector2(x, y);
+                    if (Vector2.Distance(center, position) <= radius)
+                    {
+                        spriteBatch.Draw(GFX._whitePixel, position, color);
+                    }
+                }
+            }
+        }
+        public static Texture2D CreateCircleTexture(GraphicsDevice graphicsDevice, int diameter)
+        {
+            int radius = diameter / 2;
+            Texture2D circle = new Texture2D(graphicsDevice, diameter, diameter);
+            Color[] data = new Color[diameter * diameter];
+
+            for (int x = 0; x < diameter; x++)
+            {
+                for (int y = 0; y < diameter; y++)
+                {
+                    int index = x + y * diameter;
+                    Vector2 pos = new Vector2(x - radius, y - radius);
+                    data[index] = pos.Length() <= radius ? Color.White : Color.Transparent;
+                }
+            }
+
+            circle.SetData(data);
+            return circle;
+        }
+        public static Texture2D CreateCircleTextureAA(GraphicsDevice graphicsDevice, int diameter, float aaThickness)
+        {
+            // Ajouter une marge de 2 pixels pour éviter les coupures
+            int textureSize = diameter + (int)(aaThickness * 2) + 2; // Marge supplémentaire;
+            int radius = diameter / 2;
+            Texture2D circle = new Texture2D(graphicsDevice, textureSize, textureSize);
+            Color[] data = new Color[textureSize * textureSize];
+
+            // Centre ajusté pour la nouvelle taille
+            Vector2 center = new Vector2(textureSize / 2f, textureSize / 2f);
+
+            for (int x = 0; x < textureSize; x++)
+            {
+                for (int y = 0; y < textureSize; y++)
+                {
+                    int index = x + y * textureSize;
+                    Vector2 pos = new Vector2(x, y);
+                    float distance = Vector2.Distance(center, pos);
+
+                    float alpha = MathHelper.Clamp(
+                        (radius - distance + aaThickness) / aaThickness,
+                        0f, 1f);
+
+                    data[index] = Color.White * alpha;
+                }
+            }
+
+            circle.SetData(data);
+            return circle;
+        }
+        public static void FilledCircle(this SpriteBatch batch, Texture2D texCircle, Vector2 center, Vector2 radius, Color color, float rotation = 0f, SpriteEffects spriteEffects = SpriteEffects.None, float layerDepth = 0f)
+        {
+            Vector2 origin = new Vector2(texCircle.Width / 2, texCircle.Height / 2);
+            Vector2 scale = radius / texCircle.Bounds.Size.ToVector2();
+            batch.Draw(
+                texCircle,
+                center,
+                null,
+                color,        // Couleur du cercle
+                rotation,              // Rotation
+                origin,          // Point d'origine au centre
+                scale,             // Échelle
+                spriteEffects,
+                layerDepth);
+        }
+        public static void FilledCircle(this SpriteBatch batch, Texture2D texCircle, Vector2 center, float radius, Color color, float rotation = 0f, SpriteEffects spriteEffects = SpriteEffects.None, float layerDepth = 0f)
+        {
+            var r = new Vector2(radius);
+            FilledCircle(batch, texCircle, center, r, color, rotation, spriteEffects, layerDepth);
         }
 
         public static void Ellipse(this SpriteBatch batch, float x, float y, float rX, float rY, int side, Color color, float size = 1)
