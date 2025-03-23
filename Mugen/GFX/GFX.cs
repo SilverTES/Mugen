@@ -538,6 +538,64 @@ namespace Mugen.GFX
                 SpriteEffects.None,
                 0f);
         }
+        public static void CurvedLine(this SpriteBatch spriteBatch, Vector2 pointA, Vector2 pointB, Vector2 pointC, Color colorA, Color colorB, float thickness = 1f, int nbSegments = 200)
+        {
+            int segments = nbSegments; // Nombre de segments pour la courbe
+            Vector2 previousPoint = pointA;
+
+            for (int i = 1; i <= segments; i++)
+            {
+                float t = i / (float)segments;
+
+                // Calculer le point sur la courbe de Bézier quadratique
+                float tSquared = t * t;
+                float oneMinusT = 1 - t;
+                float oneMinusTSquared = oneMinusT * oneMinusT;
+                Vector2 currentPoint = oneMinusTSquared * pointA + 2 * oneMinusT * t * pointC + tSquared * pointB;
+
+                // Dessiner un segment entre previousPoint et currentPoint
+                float distance = Vector2.Distance(previousPoint, currentPoint);
+                float angle = (float)Math.Atan2(currentPoint.Y - previousPoint.Y, currentPoint.X - previousPoint.X);
+
+                spriteBatch.Draw(
+                    _whitePixel,
+                    previousPoint,
+                    null,
+                    Color.Lerp(colorA, colorB, (float)i / (float)segments),
+                    angle,
+                    Vector2.One * .5f,
+                    new Vector2(distance, thickness), // Étirer le pixel pour former une ligne
+                    SpriteEffects.None,
+                    0f
+                );
+
+                previousPoint = currentPoint;
+            }
+        }
+        public static void CurvedLine(this SpriteBatch spriteBatch, Texture2D texture, Vector2 pointA, Vector2 pointB, Vector2 pointC, Color colorA, Color colorB, float thickness = 1f, int nbSegments = 200)
+        {
+            int segments = nbSegments; // Nombre de segments pour la courbe
+            Vector2 previousPoint = pointA;
+
+            for (int i = 1; i <= segments; i++)
+            {
+                float t = i / (float)segments;
+
+                // Calculer le point sur la courbe de Bézier quadratique
+                float tSquared = t * t;
+                float oneMinusT = 1 - t;
+                float oneMinusTSquared = oneMinusT * oneMinusT;
+                Vector2 currentPoint = oneMinusTSquared * pointA + 2 * oneMinusT * t * pointC + tSquared * pointB;
+
+                // Dessiner un segment entre previousPoint et currentPoint
+                float distance = Vector2.Distance(previousPoint, currentPoint);
+                float angle = (float)Math.Atan2(currentPoint.Y - previousPoint.Y, currentPoint.X - previousPoint.X);
+
+                GFX.Draw(spriteBatch, texture, Color.Lerp(colorA, colorB, (float)i / (float)segments), 0, previousPoint, Position.CENTER, Vector2.One * .2f);
+
+                previousPoint = currentPoint;
+            }
+        }
 
         public static void Line(this SpriteBatch spriteBatch, float x1, float y1, float x2, float y2, Color color, float thickness = 1)
         {
