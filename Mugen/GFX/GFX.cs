@@ -110,7 +110,7 @@ namespace Mugen.GFX
         static public Texture2D? _defaultSkinGui = null;
         static public Texture2D? _gamePadSNES = null;
 
-        internal static void Init(GraphicsDevice graphicsDevice) //, SpriteFont defaultFont)
+        public static void Init(GraphicsDevice graphicsDevice) //, SpriteFont defaultFont)
         {
             //_defaultFont = defaultFont;
 
