@@ -56,7 +56,7 @@ namespace Mugen.Core
 
             return _stackScreen.Peek();
         }
-        public static void Init(Node initialScreen, int nbLayers, List<int> layersOrder)
+        public static void Init(Node initialScreen, List<int> layersOrder)
         {
             //_windowManager = windowManager;
             _spriteBatch = WindowManager._batch;

@@ -63,6 +63,14 @@ namespace Mugen.Core
         {
             return Enum.GetNames(typeof(T)).Length;
         }
+        public static int[] GetArray<T>()
+        {
+            return (int[])Enum.GetValues(typeof(T));
+        }
+        public static List<int> GetList<T>()
+        {
+            return [.. GetArray<T>()];
+        }
     }
 
     public static class StaticType<T>
