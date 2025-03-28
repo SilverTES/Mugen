@@ -32,6 +32,100 @@ namespace Mugen.Core
         public bool _onFocus = false; // trigger : is focused navi
         public bool _isFocus = false; // status : is focused navi
     }
+    public class State<T> where T : Enum
+    {
+        // State Attributes
+        public T CurState => _state;
+        private T _state;
+        private T _prevState;
+
+        private Action[] _onStates = [];
+        private Action[] _offStates = [];
+
+        public State(T startState) 
+        {
+            _state = startState;
+            _prevState = startState;
+
+            var nbStates = Enum.GetValues(typeof(T)).Length;
+
+            _onStates = new Action[nbStates];
+            _offStates = new Action[nbStates];
+        }
+
+        // --- Manage States
+        //protected void InitStates(int nbStates)
+        //{
+        //    _onStates = new Action[nbStates];
+        //    _offStates = new Action[nbStates];
+        //}
+        public void SetOn(T State, Action onActionState)
+        {
+            int state = Convert.ToInt32(State);
+            if (state < 0 || state >= _onStates.Length)
+                return;
+
+            _onStates[state] = onActionState;
+        }
+        public void SetOff(T State, Action offActionState)
+        {
+            int state = Convert.ToInt32(State);
+            if (state < 0 || state >= _offStates.Length)
+                return;
+
+            _offStates[state] = offActionState;
+        }
+
+        public void Set(T state)
+        {
+            //int state = Convert.ToInt32(State);
+            // Exit previous state
+            Off(_state);
+            // change state to new state , save previous state
+            _prevState = _state;
+            _state = state;
+            // Enter new state
+            On(_state);
+        }
+        /// <summary>
+        /// Change state only if different than current state
+        /// </summary>
+        /// <param name="state"></param>
+        public void Change(T State)
+        {
+            int state = Convert.ToInt32(State);
+            if (Convert.ToInt32(_state) != state)
+            {
+                Set(State);
+            }
+        }
+        public T GetState()
+        {
+            return _state;
+        }
+        public void BackState()
+        {
+            Change(_prevState);
+        }
+        private void Off(T State)
+        {
+            int state = Convert.ToInt32(State);
+            if (state < 0 || state >= _onStates.Length)
+                return;
+
+            if (_offStates[state] != null)
+                _offStates[state]();
+        }
+        private void On(T State)
+        {
+            int state = Convert.ToInt32(State);
+            if (state < 0 || state >= _onStates.Length)
+                return;
+            if (_onStates[state] != null)
+                _onStates[state]();
+        }
+        //protected virtual void RunState(GameTime gameTime) { }
+    }
     public class Node : ZIndex, IClone<Node>
     {
         #region Attributes
@@ -165,82 +259,9 @@ namespace Mugen.Core
         public Action<Node>? _updateAction = null;
         public Action<Node, SpriteBatch>? _renderAction = null;
 
-        // State Attributes
-        protected int _state = Const.NoIndex;
-        protected int _prevState = Const.NoIndex;
-
-        protected Action[] _onStates = [];
-        protected Action[] _offStates = [];
-
         #endregion
 
         #region Methodes
-        // --- Manage States
-        protected void InitStates(int nbStates)
-        {
-            _onStates = new Action[nbStates];
-            _offStates = new Action[nbStates];
-        }
-        protected void SetStateOn(int state, Action onActionState)
-        {
-            if (state < 0 || state >= _onStates.Length)
-                return;
-
-            _onStates[state] = onActionState;
-        }
-        protected void SetStateOff(int state, Action offActionState)
-        {
-            if (state < 0 || state >= _offStates.Length)
-                return;
-
-            _offStates[state] = offActionState;
-        }
-
-        public void SetState(int state)
-        {
-            // Exit previous state
-            OffState(_state);
-            // change state to new state , save previous state
-            _prevState = _state;
-            _state = state;
-            // Enter new state
-            OnState(_state);
-        }
-        /// <summary>
-        /// Change state only if different than current state
-        /// </summary>
-        /// <param name="state"></param>
-        public void ChangeState(int state)
-        {
-            if (_state != state)
-            {
-                SetState(state);
-            }
-        }
-        public int GetState()
-        {
-            return _state;
-        }
-        public void BackState()
-        {
-            ChangeState(_prevState);
-        }
-        private void OffState(int state) 
-        {
-            if (state < 0 || state >= _onStates.Length) 
-                return;
-
-            if (_offStates[state] != null)
-                _offStates[state]();
-        }
-        private void OnState(int state) 
-        {
-            if (state < 0 || state >= _onStates.Length)
-                return;
-            if (_onStates[state] != null)
-                _onStates[state]();
-        }
-        protected virtual void RunState(GameTime gameTime) {}
         // --- Navigation
         public Node SetAsNaviNodeFocus()
         {

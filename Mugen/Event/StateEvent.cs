@@ -70,7 +70,7 @@ namespace Mugen.Event
     /// Event System : ON ,OFF ,IS
     /// </summary>
     /// 
-    public class State<T> where T : Enum
+    public class StateEvent<T> where T : Enum
     {
         bool[] _prevEvents;
         bool[] _events;
@@ -78,7 +78,7 @@ namespace Mugen.Event
         /// <summary>
         /// Create new Event System
         /// </summary>
-        public State()
+        public StateEvent()
         {
             var enums = Enum.GetValues(typeof(T));
 

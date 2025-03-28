@@ -27,7 +27,7 @@ namespace Mugen.Input
         {
             //_mapButtonState = Enum.GetValues(typeof(T)).Cast<T>().ToDictionary(state => state, state => new State()); // Toutes les valeurs à false par défaut
 
-            var enums = Enum.GetValues(typeof(T)).Cast<T>().Select(state =>Convert.ToInt32(state)).ToArray();
+            var enums = Enum.GetValues(typeof(T));//.Cast<T>().Select(state =>Convert.ToInt32(state)).ToArray();
 
             _states = new State[enums.Length];
             for (int i = 0; i < enums.Length; i++)
