@@ -1,10 +1,134 @@
 ﻿using Microsoft.Xna.Framework;
+using System.Xml.Linq;
 
 
 namespace Mugen.Input
 {
-        // Manage button delay/tempo
-        public class ButtonControl
+    /// <summary>
+    /// Manage button delay / tempo
+    /// </summary>
+    public class Control<T> where T : Enum
+    {
+        public class State
+        {
+            public bool _noRepeat = false; // noRepeat button
+            public bool _oncePress = false; // button once pressed no delay;
+            public bool _repeat = false;  // repeat the button
+            public bool _onPress = false; // button on pressed with delay
+            public bool _isPress = false; // button is pressed no delay
+            public int _tempoToRepeat = 0; // tempo before repeat button
+            public int _tempoRepeat = 0;   // tempo for repeat button
+        };
+
+        //Dictionary<T, State> _states = [];
+        State[] _states;
+
+        public Control()
+        {
+            //_mapButtonState = Enum.GetValues(typeof(T)).Cast<T>().ToDictionary(state => state, state => new State()); // Toutes les valeurs à false par défaut
+
+            var enums = Enum.GetValues(typeof(T)).Cast<T>().Select(state =>Convert.ToInt32(state)).ToArray();
+
+            _states = new State[enums.Length];
+            for (int i = 0; i < enums.Length; i++)
+            {
+                _states[i] = new State();
+            }
+
+        }
+        public bool Once(T Name, bool button)
+        {
+            int name = Convert.ToInt32(Name);
+
+            if (button)
+            {
+                if (!_states[name]._noRepeat)
+                {
+                    _states[name]._noRepeat = true;
+                    _states[name]._oncePress = true;
+                }
+                else
+                {
+                    _states[name]._oncePress = false;
+                }
+            }
+            else
+            {
+                _states[name]._noRepeat = false;
+                _states[name]._oncePress = false;
+            }
+
+            return _states[name]._oncePress;
+        }
+        public bool Once(T Name)
+        {
+            int name = Convert.ToInt32(Name);
+
+            return _states[name]._oncePress;
+        }
+        public bool On(T Name, bool button, int delayToRepeat = 30, int delayRepeat = 4)
+        {
+            int name = Convert.ToInt32(Name);
+
+            _states[name]._onPress = false;
+            _states[name]._isPress = button;
+
+            if (button)
+            {
+                if (_states[name]._tempoToRepeat == 0)
+                    _states[name]._onPress = true;
+
+                ++_states[name]._tempoToRepeat;
+
+                if (_states[name]._repeat)
+                {
+                    ++_states[name]._tempoRepeat;
+                    if (_states[name]._tempoRepeat > delayRepeat)
+                    {
+                        _states[name]._onPress = true;
+                        _states[name]._tempoRepeat = 0;
+                    }
+                }
+            }
+            else
+            {
+                _states[name]._tempoToRepeat = 0;
+            }
+
+
+            if (_states[name]._tempoToRepeat > delayToRepeat)
+            {
+                if (delayToRepeat > 0) // if -1 then no repeat
+                    _states[name]._repeat = true;
+            }
+            else
+            {
+                _states[name]._repeat = false;
+            }
+
+            return _states[name]._onPress;
+        }
+        public bool Is(T Name, bool button)
+        {
+            int name = Convert.ToInt32(Name);
+
+            return _states[name]._isPress = button;
+        }
+        public bool On(T Name)
+        {
+            int name = Convert.ToInt32(Name);
+            return _states[name]._onPress;
+        }
+        public bool Is(T Name)
+        {
+            int name = Convert.ToInt32(Name);
+            return _states[name]._isPress;
+        }
+    };
+    /// <summary>
+    /// Manage button delay / tempo
+    /// </summary>
+    public class ButtonControl
         {
             public class State
             {
