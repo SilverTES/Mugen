@@ -59,21 +59,21 @@ namespace Mugen.Core
         //    _onStates = new Action[nbStates];
         //    _offStates = new Action[nbStates];
         //}
-        public void SetOn(T State, Action onActionState)
+        public void On(T State, Action onActionState)
         {
             int state = Convert.ToInt32(State);
             if (state < 0 || state >= _onStates.Length)
                 return;
 
-            _onStates[state] = onActionState;
+            _onStates[state] += onActionState;
         }
-        public void SetOff(T State, Action offActionState)
+        public void Off(T State, Action offActionState)
         {
             int state = Convert.ToInt32(State);
             if (state < 0 || state >= _offStates.Length)
                 return;
 
-            _offStates[state] = offActionState;
+            _offStates[state] += offActionState;
         }
 
         public void Set(T state)
