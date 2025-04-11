@@ -305,4 +305,150 @@ namespace Mugen.Animation
         }
 
     }
+
+    public class Motion2D
+    {
+        public string Name = "";
+        public bool IsPlay = false;
+        public bool OnFinish = false;
+        public float CurFrame = 0;
+        public TweeningVec2 Tweening;
+
+        public Func<float, float, float, float, float> Easing;
+
+        public Motion2D(string name)
+        {
+            Name = name;
+            Easing = Mugen.Animation.Easing.Linear;
+            Tweening._start = Vector2.Zero;
+            Tweening._goal = Vector2.One;
+            Tweening._duration = 1f;
+        }
+
+        public Motion2D(string name, Func<float, float, float, float, float> easing, Vector2 start, Vector2 end, float duration)
+        {
+            Name = name;
+            Easing = easing;
+            Tweening._start = start;
+            Tweening._goal = end;
+            Tweening._duration = duration;
+        }
+    }
+
+    public class Animate2D
+    {
+        Dictionary<string, Motion2D> _motion2Ds = new();
+        public Animate2D() 
+        { 
+
+        }
+        public void Start(string name)
+        {
+            if (_motion2Ds.ContainsKey(name))
+            {
+                _motion2Ds[name].OnFinish = false;
+                _motion2Ds[name].CurFrame = 0;
+                _motion2Ds[name].IsPlay = true;
+            }
+        }
+        public Dictionary<string, Motion2D> GetAll()
+        {
+            return _motion2Ds;
+        }
+        public void SetMotion(string name, Func<float, float, float, float, float> easing, Vector2 start, Vector2 goal, float duration)
+        {
+            if (_motion2Ds.ContainsKey(name))
+            {
+                _motion2Ds[name] = new Motion2D(name, easing, start, goal, duration);
+            }
+        }
+        public void SetMotion(string name, Func<float, float, float, float, float> easing, TweeningVec2 tweening)
+        {
+            if (_motion2Ds.ContainsKey(name))
+            {
+                _motion2Ds[name] = new Motion2D(name, easing, tweening._start, tweening._goal, tweening._duration);
+            }
+        }
+        public void Add(string name)
+        {
+            _motion2Ds.Add(name, new Motion2D(name));
+        }
+        public void Add(string name, Func<float, float, float, float, float> easing, Vector2 start, Vector2 goal, float duration)
+        {
+            _motion2Ds.Add(name, new Motion2D(name, easing, start, goal, duration));
+        }
+        public void Add(string name, Func<float, float, float, float, float> easing, TweeningVec2 tweening)
+        {
+            _motion2Ds.Add(name, new Motion2D(name, easing, tweening._start, tweening._goal, tweening._duration));
+        }
+        public Motion2D Get(string name)
+        {
+            return _motion2Ds[name];
+        }
+        public bool IsPlay(string name)
+        {
+            if (_motion2Ds.ContainsKey(name))
+            {
+                return _motion2Ds[name].IsPlay;
+            }
+            return false;
+        }
+        public bool OnFinish(string name)
+        {
+            if (_motion2Ds.ContainsKey(name))
+            {
+                return _motion2Ds[name].OnFinish;
+            }
+            return false;
+        }
+        public void Update(string name, float step = 1f)
+        {
+            if (_motion2Ds.ContainsKey(name))
+            {
+                var motion2D = _motion2Ds[name];
+
+                    motion2D.OnFinish = false;
+
+                if (motion2D.IsPlay)
+                    motion2D.CurFrame += step;
+
+                if (motion2D.CurFrame >= motion2D.Tweening._duration)
+                {
+                    motion2D.OnFinish = true;
+                    motion2D.CurFrame = 0f;
+                    motion2D.IsPlay = false;
+                }
+            }
+        }
+        public void Update(float step = 1f)
+        {
+            foreach (var motion2D in _motion2Ds)
+            {
+                motion2D.Value.OnFinish = false;
+                
+                if (motion2D.Value.IsPlay)
+                    motion2D.Value.CurFrame += step;
+
+                if (motion2D.Value.CurFrame >= motion2D.Value.Tweening._duration)
+                {
+                    motion2D.Value.OnFinish = true;
+                    motion2D.Value.CurFrame = 0f;
+                    motion2D.Value.IsPlay = false;
+                }
+
+            }
+        }
+        public Vector2 Value(string name)
+        {
+
+            if (_motion2Ds.ContainsKey(name))
+                return Easing.GetValue(_motion2Ds[name].Easing, _motion2Ds[name].CurFrame, _motion2Ds[name].Tweening);
+            else
+                return Vector2.Zero;
+        }
+        public void Transit(string name, ref Vector2 value) // Copy reference to another var !
+        {
+            value = Value(name);
+        }
+    }
 }
