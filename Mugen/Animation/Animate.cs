@@ -432,7 +432,7 @@ namespace Mugen.Animation
                 if (motion2D.Value.CurFrame >= motion2D.Value.Tweening._duration)
                 {
                     motion2D.Value.OnFinish = true;
-                    motion2D.Value.CurFrame = 0f;
+                    //motion2D.Value.CurFrame = 0f;
                     motion2D.Value.IsPlay = false;
                 }
 
