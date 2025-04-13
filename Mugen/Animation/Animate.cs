@@ -410,14 +410,16 @@ namespace Mugen.Animation
                     motion2D.OnFinish = false;
 
                 if (motion2D.IsPlay)
-                    motion2D.CurFrame += step;
-
-                if (motion2D.CurFrame >= motion2D.Tweening._duration)
                 {
-                    motion2D.OnFinish = true;
-                    motion2D.CurFrame = 0f;
-                    motion2D.IsPlay = false;
+                    motion2D.CurFrame += step;
+                    if (motion2D.CurFrame >= motion2D.Tweening._duration)
+                    {
+                        motion2D.OnFinish = true;
+                        //motion2D.CurFrame = 0f;
+                        motion2D.IsPlay = false;
+                    }
                 }
+
             }
         }
         public void Update(float step = 1f)
@@ -427,14 +429,17 @@ namespace Mugen.Animation
                 motion2D.Value.OnFinish = false;
                 
                 if (motion2D.Value.IsPlay)
-                    motion2D.Value.CurFrame += step;
-
-                if (motion2D.Value.CurFrame >= motion2D.Value.Tweening._duration)
                 {
-                    motion2D.Value.OnFinish = true;
-                    //motion2D.Value.CurFrame = 0f;
-                    motion2D.Value.IsPlay = false;
+                    motion2D.Value.CurFrame += step;
+                    if (motion2D.Value.CurFrame >= motion2D.Value.Tweening._duration)
+                    {
+                        motion2D.Value.OnFinish = true;
+                        //motion2D.Value.CurFrame = 0f;
+                        motion2D.Value.IsPlay = false;
+                    }
+
                 }
+
 
             }
         }
