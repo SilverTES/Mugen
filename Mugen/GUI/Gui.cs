@@ -346,6 +346,7 @@ namespace Mugen.GUI
 
         Position _direction;
 
+        public List<Node> Nodes => _nodes;
         List<Node> _nodes = [];
 
         Style.Space _margin; // container space
