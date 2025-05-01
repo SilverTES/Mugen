@@ -59,6 +59,10 @@ namespace Mugen.Core
         //    _onStates = new Action[nbStates];
         //    _offStates = new Action[nbStates];
         //}
+        public bool Is(T State)
+        {
+            return _state.Equals(State);
+        }
         public void On(T State, Action onActionState)
         {
             int state = Convert.ToInt32(State);
