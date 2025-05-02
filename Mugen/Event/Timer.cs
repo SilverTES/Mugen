@@ -153,6 +153,17 @@ namespace Mugen.Event
                 _factorTimes[i] = 1f;
             }
         }
+        public bool IsActive(T IdTimer)
+        {
+            int idTimer = Convert.ToInt32(IdTimer);
+            return _active[idTimer];
+        }
+        public void SetOnActive(T IdTimer, bool active = true)
+        {
+            int idTimer = Convert.ToInt32(IdTimer);
+            SetOn(IdTimer);
+            _active[idTimer] = active;
+        }
         public void On(T IdTimer, Action action)
         {
             int idTimer = Convert.ToInt32(IdTimer);

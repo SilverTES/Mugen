@@ -74,6 +74,13 @@ namespace Mugen.Core
         {
             SetLayerParameter(indexLayer, layerParameter.sortMode, layerParameter.blendState, layerParameter.samplerState, layerParameter.depthStencilState, layerParameter.rasterizerState, layerParameter.effect, layerParameter.transformMatrix);
         }
+        public static LayerParameter? GetLayerParameter(int indexLayer)
+        {
+            if (indexLayer < 0 || indexLayer > _layers.Count)
+                return null;
+
+            return _layerParameter[indexLayer];
+        }
         public static Node ToScreen(Node screen)
         {
             _stackScreen.Push(screen);
