@@ -124,6 +124,7 @@ namespace Mugen.Event
         float[] _timers;
         float[] _tics;
         bool[] _on;
+        Action[] _onTimer;
         bool[] _repeat;
 
         float[] _factorTimes;
@@ -138,12 +139,24 @@ namespace Mugen.Event
             _timers = new float[nbTimer];
             _tics = new float[nbTimer];
             _on = new bool[nbTimer];
+            _onTimer = new Action[nbTimer];
             _repeat = new bool[nbTimer];
 
             _factorTimes = new float[nbTimer];
 
             for (int i = 0; i < nbTimer; i++)
+            {
+                _active[i] = false;
+                _timers[i] = 1f;
+                _on[i] = false;
+                _repeat[i] = false;
                 _factorTimes[i] = 1f;
+            }
+        }
+        public void On(T IdTimer, Action action)
+        {
+            int idTimer = Convert.ToInt32(IdTimer);
+            _onTimer[idTimer] += action;
         }
         public void Set(T IdTimer, float tic, bool repeat = false)
         {
@@ -212,6 +225,7 @@ namespace Mugen.Event
                 if (_timers[i] <= 0f)
                 {
                     _on[i] = true;
+                    _onTimer[i]?.Invoke();
                     _timers[i] = 1f;
 
                     if (_repeat[i])
