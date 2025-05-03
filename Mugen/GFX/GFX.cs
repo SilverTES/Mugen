@@ -838,11 +838,11 @@ namespace Mugen.GFX
             rect = RectangleF.Translate(rect, new Vector2(.5f, .5f));
 
             // Top
-            Line(spriteBatch, new Vector2(rect.X + offset, rect.Y), new Vector2(rect.X + offset + horizontalSize, rect.Y), color, thickness);
+            Line(spriteBatch, new Vector2(rect.X + offset, rect.Y), new Vector2(rect.X - offset + horizontalSize, rect.Y), color, thickness);
             Line(spriteBatch, new Vector2(rect.Right - offset, rect.Y), new Vector2(rect.Right + offset - horizontalSize, rect.Y), color, thickness);
 
             // Bottom
-            Line(spriteBatch, new Vector2(rect.X + offset, rect.Bottom), new Vector2(rect.X + offset + horizontalSize, rect.Bottom), color, thickness);
+            Line(spriteBatch, new Vector2(rect.X + offset, rect.Bottom), new Vector2(rect.X - offset + horizontalSize, rect.Bottom), color, thickness);
             Line(spriteBatch, new Vector2(rect.Right - offset, rect.Bottom), new Vector2(rect.Right + offset - horizontalSize, rect.Bottom), color, thickness);
 
             // Left
