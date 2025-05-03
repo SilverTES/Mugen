@@ -1,123 +1,137 @@
-﻿using Mugen.Core;
+﻿using Microsoft.Xna.Framework;
+using Mugen.Core;
 
 namespace Mugen.Event
 {
-    public class MessageEvent
+    namespace Message
     {
-        static uint uniqueMessageId = 0;
-
-        public uint _id = 0;
-        public int _type = -1;
-        public object? _data = null;
-        public Node? _to = null;
-        public Node? _from = null;
-
-        public MessageEvent(int type, object data, Node to, Node? from = null)
+        /// <summary>
+        /// Interface de base pour tous les messages.
+        /// </summary>
+        public interface IMessage
         {
-            _id = uniqueMessageId;
-            _type = type;
-            _data = data;
-            _to = to;
-            _from = from;
-            ++uniqueMessageId;
-        }
-    }
-
-    public class MessageQueue
-    {
-        Queue<MessageEvent> _messages = new Queue<MessageEvent>();
-
-        public MessageQueue()
-        {
-            ClearAll();
-        }
-        private void Add(MessageEvent message)
-        {
-            if (null != message)
-                _messages.Enqueue(message);
-
-        }
-        public void ClearAll()
-        {
-            _messages.Clear();
+            // Peut être étendu avec des propriétés comme un ID ou un horodatage si nécessaire
         }
 
-        public uint Post(int type, object data, Node to, Node? from = null)
+        public class MessageBus
         {
-            MessageEvent message = new MessageEvent(type, data, to, from);
-            if (null != to)
-                Add(message);
+            // Singleton
+            private static MessageBus? _instance;
+            public static MessageBus Instance => _instance ??= new MessageBus();
 
-            return message._id;
-        }
-        public bool IsEmpty()
-        {
-            return _messages.Count == 0;
-        }
-        public bool IsMessage()
-        {
-            return null != GetMessage();
-        }
-        public MessageEvent? GetMessage()
-        {
-            return IsEmpty() ? null : _messages.Peek();
-        }
-        public uint LastMessageId()
-        {
-            return GetMessage()!._id;
-        }
-        public object? LastMessageData()
-        {
-            return IsMessage() ? GetMessage()!._data : null;
-        }
-        public Node? From()
-        {
-            return IsMessage() ? GetMessage()!._from : null;
-        }
-        public Node? To()
-        {
-            return IsMessage() ? GetMessage()!._to : null;
-        }
-        public object? GetData()
-        {
-            return IsMessage() ? GetMessage()!._data : null;
-        }
-        public int Type()
-        {
-            return IsMessage() ? GetMessage()!._type : -1;
-        }
-        public void Dispatch()
-        {
-            while (_messages.Count > 0)
+            // Abonnés par type de message
+            private readonly Dictionary<Type, List<Action<IMessage>>> _subscribers;
+            // File d'attente pour les messages immédiats
+            private readonly Queue<(IMessage message, float delay)> _messageQueue;
+            // Messages différés
+            private readonly List<(IMessage message, float delay)> _delayedMessages;
+
+            public MessageBus()
             {
-                MessageEvent message = _messages.Peek();
+                _subscribers = new Dictionary<Type, List<Action<IMessage>>>();
+                _messageQueue = new Queue<(IMessage message, float delay)>();
+                _delayedMessages = new List<(IMessage message, float delay)>();
+            }
 
-                if (null != message)
+            /// <summary>
+            /// S'abonner à un type de message spécifique.
+            /// </summary>
+            public void Subscribe<TMessage>(Action<TMessage> callback) where TMessage : IMessage
+            {
+                Type messageType = typeof(TMessage);
+                if (!_subscribers.ContainsKey(messageType))
                 {
-                    if (null != message._to)
-                    {
-                        message._to._message = message;
-                    }
+                    _subscribers[messageType] = new List<Action<IMessage>>();
+                }
+                _subscribers[messageType].Add(message => callback((TMessage)message));
+            }
 
-                    _messages.Dequeue();
+            /// <summary>
+            /// Se désabonner d'un type de message.
+            /// </summary>
+            public void Unsubscribe<TMessage>(Action<TMessage> callback) where TMessage : IMessage
+            {
+                Type messageType = typeof(TMessage);
+                if (_subscribers.ContainsKey(messageType))
+                {
+                    _subscribers[messageType].RemoveAll(action =>
+                    {
+                        // Comparer les délégués en extrayant la méthode cible
+                        return action.Target == callback.Target && action.Method == callback.Method;
+                    });
                 }
             }
-        }
 
-        // Debug
-        public void ShowAll()
-        {
-            if (IsEmpty())
+            /// <summary>
+            /// Envoyer un message (immédiat ou différé).
+            /// </summary>
+            public void SendMessage<TMessage>(TMessage message, float delay = 0f) where TMessage : IMessage
             {
-                Console.WriteLine("Message Queue is EMPTY !");
-                return;
+                _messageQueue.Enqueue((message, delay));
             }
 
-            foreach (var message in _messages)
+            /// <summary>
+            /// Traiter les messages (appelé dans Update).
+            /// </summary>
+            public void ProcessMessages(GameTime gameTime)
             {
-                Console.WriteLine(" -- > " + message._id + " , " + message._type);
+                float deltaTime = (float)gameTime.ElapsedGameTime.TotalSeconds;
+
+                // Mettre à jour les messages différés
+                for (int i = _delayedMessages.Count - 1; i >= 0; i--)
+                {
+                    var (message, delay) = _delayedMessages[i];
+                    delay -= deltaTime;
+                    if (delay <= 0f)
+                    {
+                        DispatchMessage(message);
+                        _delayedMessages.RemoveAt(i);
+                    }
+                    else
+                    {
+                        _delayedMessages[i] = (message, delay);
+                    }
+                }
+
+                // Traiter la file d'attente
+                while (_messageQueue.Count > 0)
+                {
+                    var (message, delay) = _messageQueue.Dequeue();
+                    if (delay > 0f)
+                    {
+                        _delayedMessages.Add((message, delay));
+                    }
+                    else
+                    {
+                        DispatchMessage(message);
+                    }
+                }
             }
 
+            private void DispatchMessage(IMessage message)
+            {
+                Type messageType = message.GetType();
+                if (_subscribers.ContainsKey(messageType))
+                {
+                    var subscribers = new List<Action<IMessage>>(_subscribers[messageType]);
+                    foreach (var subscriber in subscribers)
+                    {
+                        subscriber?.Invoke(message);
+                    }
+                }
+            }
+
+            /// <summary>
+            /// Réinitialiser le bus.
+            /// </summary>
+            public void Clear()
+            {
+                _subscribers.Clear();
+                _messageQueue.Clear();
+                _delayedMessages.Clear();
+            }
         }
+
+        
     }
 }

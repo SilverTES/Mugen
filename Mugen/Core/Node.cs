@@ -205,45 +205,45 @@ namespace Mugen.Core
         public HashSet<int> _vecCollideBy = new HashSet<int>(); // std::set for avoid duplicate elements
 
         // Messaging
-        public MessageEvent? _message = null;
-        public bool HasMessage()
-        {
-            return null != _message;
-        }
-        public void EndMessage()
-        {
-            _message = null;
-        }
-        public void PollMessage()
-        {
-            if (null != _message)
-            {
-                OnMessage();
-                _message = null;
-            }
-        }
-        protected virtual void OnMessage() { }
+        //public MessageEvent? _message = null;
+        //public bool HasMessage()
+        //{
+        //    return null != _message;
+        //}
+        //public void EndMessage()
+        //{
+        //    _message = null;
+        //}
+        //public void PollMessage()
+        //{
+        //    if (null != _message)
+        //    {
+        //        OnMessage();
+        //        _message = null;
+        //    }
+        //}
+        //protected virtual void OnMessage() { }
 
-        public string? _strMessage = null;
+        //public string? _strMessage = null;
 
-        public bool HasStrMessage()
-        {
-            return null != _strMessage;
-        }
-        public void EndStrMessage()
-        { 
-            _strMessage = null; 
-        }
-        public void PollStrMessage()
-        {
-            if (null != _strMessage)
-            {
-                OnStrMessage();
-                _strMessage = null;
-            }
-        }
+        //public bool HasStrMessage()
+        //{
+        //    return null != _strMessage;
+        //}
+        //public void EndStrMessage()
+        //{ 
+        //    _strMessage = null; 
+        //}
+        //public void PollStrMessage()
+        //{
+        //    if (null != _strMessage)
+        //    {
+        //        OnStrMessage();
+        //        _strMessage = null;
+        //    }
+        //}
 
-        protected virtual void OnStrMessage() { }
+        //protected virtual void OnStrMessage() { }
 
         // map of Collide Zone(Rect) of Clip
         public Dictionary<int, Collide.Zone> _collideZones = new Dictionary<int, Collide.Zone>();
