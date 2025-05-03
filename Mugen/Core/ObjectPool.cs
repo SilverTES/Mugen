@@ -70,5 +70,11 @@ namespace Mugen.Core
         {
             return _activeObjects; // Retourner la liste des objets actifs
         }
+
+        // Obtient tous les objets
+        public IEnumerable<T> GetAllObjects()
+        {
+            return _pool.Concat(_activeObjects); // Retourner la liste complète
+        }
     }
 }
