@@ -831,6 +831,30 @@ namespace Mugen.GFX
 
             return rect;
         }
+        public static RectangleF RectangleTarget(this SpriteBatch spriteBatch, RectangleF rect, Color color, float horizontalSize, float verticalSize, float thickness = 1f)
+        {
+            // TODO: Figure out the pattern for the offsets required and then handle it in the line instead of here
+            float offset = thickness / 2;
+            rect = RectangleF.Translate(rect, new Vector2(.5f, .5f));
+
+            // Top
+            Line(spriteBatch, new Vector2(rect.X - offset, rect.Y), new Vector2(rect.X + offset + horizontalSize, rect.Y), color, thickness);
+            Line(spriteBatch, new Vector2(rect.Right - offset, rect.Y), new Vector2(rect.Right + offset - horizontalSize, rect.Y), color, thickness);
+
+            // Bottom
+            Line(spriteBatch, new Vector2(rect.X - offset, rect.Bottom), new Vector2(rect.X + offset + horizontalSize, rect.Bottom), color, thickness);
+            Line(spriteBatch, new Vector2(rect.Right - offset, rect.Bottom), new Vector2(rect.Right + offset - horizontalSize, rect.Bottom), color, thickness);
+
+            // Left
+            Line(spriteBatch, new Vector2(rect.X, rect.Y - offset), new Vector2(rect.X, rect.Y + offset + verticalSize), color, thickness);
+            Line(spriteBatch, new Vector2(rect.X, rect.Bottom + offset), new Vector2(rect.X, rect.Bottom + offset - verticalSize), color, thickness);
+
+            // Right
+            Line(spriteBatch, new Vector2(rect.Right, rect.Y - offset), new Vector2(rect.Right, rect.Y + offset + verticalSize), color, thickness);
+            Line(spriteBatch, new Vector2(rect.Right, rect.Bottom + offset), new Vector2(rect.Right, rect.Bottom + offset - verticalSize), color, thickness);
+
+            return rect;
+        }
         public static RectangleF RectangleI(this SpriteBatch spriteBatch, Rectangle rect, Color color, float thickness = 1f)
         {
             return Rectangle(spriteBatch, rect, color, thickness);
@@ -847,6 +871,12 @@ namespace Mugen.GFX
         {
             RectangleF rect = new RectangleF((int)location.X - size.X / 2, (int)location.Y - size.Y / 2, (int)size.X, (int)size.Y);
             Rectangle(spriteBatch, rect, color, thickness);
+            return rect;
+        }
+        public static RectangleF RectangleTargetCentered(this SpriteBatch spriteBatch, Vector2 location, Vector2 size, Color color, float horizontalSize, float verticalSize, float thickness = 1f)
+        {
+            RectangleF rect = new RectangleF((int)location.X - size.X / 2, (int)location.Y - size.Y / 2, (int)size.X, (int)size.Y);
+            RectangleTarget(spriteBatch, rect, color, horizontalSize, verticalSize, thickness);
             return rect;
         }
         public static void Circle(this SpriteBatch spriteBatch, Vector2 center, float radius, int sides, Color color, float thickness = 1f, float radians = 0f)
