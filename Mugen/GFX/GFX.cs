@@ -846,11 +846,11 @@ namespace Mugen.GFX
             Line(spriteBatch, new Vector2(rect.Right - offset, rect.Bottom), new Vector2(rect.Right + offset - horizontalSize, rect.Bottom), color, thickness);
 
             // Left
-            Line(spriteBatch, new Vector2(rect.X, rect.Y - offset), new Vector2(rect.X, rect.Y + offset + verticalSize), color, thickness);
+            Line(spriteBatch, new Vector2(rect.X, rect.Y - offset), new Vector2(rect.X, rect.Y - offset + verticalSize), color, thickness);
             Line(spriteBatch, new Vector2(rect.X, rect.Bottom + offset), new Vector2(rect.X, rect.Bottom + offset - verticalSize), color, thickness);
 
             // Right
-            Line(spriteBatch, new Vector2(rect.Right, rect.Y - offset), new Vector2(rect.Right, rect.Y + offset + verticalSize), color, thickness);
+            Line(spriteBatch, new Vector2(rect.Right, rect.Y - offset), new Vector2(rect.Right, rect.Y - offset + verticalSize), color, thickness);
             Line(spriteBatch, new Vector2(rect.Right, rect.Bottom + offset), new Vector2(rect.Right, rect.Bottom + offset - verticalSize), color, thickness);
 
             return rect;
