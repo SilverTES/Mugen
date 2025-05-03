@@ -1238,6 +1238,13 @@ namespace Mugen.Core
         {
             return _backZ;
         }
+        public void RemoveChild(Node node)
+        {
+            if (null != node)
+            {
+                _childs.Delete(node);
+            }
+        }
         public Node UpdateChilds(GameTime gameTime)
         {
             for (int index = 0; index < _childs.Count(); index++)

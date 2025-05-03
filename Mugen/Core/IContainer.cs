@@ -118,6 +118,13 @@ namespace Mugen.Core
 
             }
         }
+        //public void Remove(T obj)
+        //{
+        //    if (null != obj)
+        //    {
+        //        _objects.Remove(obj);
+        //    }
+        //}
         public T? First()
         {
             return _objects.First();
