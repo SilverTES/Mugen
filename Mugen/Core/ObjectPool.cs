@@ -1,9 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-
+﻿
 namespace Mugen.Core
 {
     public class ObjectPool<T> where T : Node
@@ -45,7 +40,7 @@ namespace Mugen.Core
                 // Utiliser l'instance de Game stockée pour créer un nouvel objet
                 obj = _factory();
 
-                Misc.Log($"New object created: {obj.GetType().Name}");
+                //Misc.Log($"New object created: {obj.GetType().Name}");
             }
 
             obj._isActive = true;
@@ -67,7 +62,7 @@ namespace Mugen.Core
             _activeObjects.Remove(obj); // Retirer de la liste des objets actifs
             _pool.Enqueue(obj);
 
-            Misc.Log($"Object returned to pool: {obj.GetType().Name}");
+            //Misc.Log($"Object returned to pool: {obj.GetType().Name}");
         }
 
         // Obtenir tous les objets actifs
