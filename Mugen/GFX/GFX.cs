@@ -824,8 +824,8 @@ namespace Mugen.GFX
             float offset = thickness / 2;
             rect = RectangleF.Translate(rect, new Vector2(.5f, .5f));
 
-            Line(spriteBatch, new Vector2(rect.X - offset, rect.Y), new Vector2(rect.Right + offset, rect.Y), color, thickness); // top
-            Line(spriteBatch, new Vector2(rect.X - offset, rect.Bottom), new Vector2(rect.Right + offset, rect.Bottom), color, thickness); // bottom
+            Line(spriteBatch, new Vector2(rect.X + offset, rect.Y), new Vector2(rect.Right - offset, rect.Y), color, thickness); // top
+            Line(spriteBatch, new Vector2(rect.X + offset, rect.Bottom), new Vector2(rect.Right - offset, rect.Bottom), color, thickness); // bottom
             Line(spriteBatch, new Vector2(rect.X, rect.Y - offset), new Vector2(rect.X, rect.Bottom + offset), color, thickness); // left
             Line(spriteBatch, new Vector2(rect.Right, rect.Y - offset), new Vector2(rect.Right, rect.Bottom + offset), color, thickness); // right
 
