@@ -8,6 +8,25 @@ namespace Mugen.Core
 {
     public static class ScreenManager
     {
+        public static Rectangle PreviousScissorRect;
+        public static RasterizerState ScissorRasterizerState = new RasterizerState { ScissorTestEnable = true };
+
+        public static void BeginScissor(SpriteBatch batch, Rectangle rect, int indexLayer, LayerParameter layerParam)
+        {
+            // Sauvegarder l'état actuel
+            PreviousScissorRect = batch.GraphicsDevice.ScissorRectangle;
+            batch.End();
+            ScreenManager.BeginDraw(indexLayer, layerParam.sortMode, layerParam.blendState, layerParam.samplerState, layerParam.depthStencilState, ScissorRasterizerState, layerParam.effect, layerParam.transformMatrix);
+            batch.GraphicsDevice.ScissorRectangle = rect;
+        }
+        public static void EndScissor(SpriteBatch batch)
+        {
+            batch.End();
+            // Restaurer l'état précédent
+            batch.GraphicsDevice.ScissorRectangle = PreviousScissorRect;
+            batch.Begin();
+        }
+
         public class LayerParameter
         {
             public SpriteSortMode sortMode = SpriteSortMode.Deferred;
