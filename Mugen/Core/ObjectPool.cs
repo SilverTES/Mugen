@@ -1,21 +1,23 @@
 ﻿
+using Microsoft.Xna.Framework;
+
 namespace Mugen.Core
 {
     public class ObjectPool<T> where T : Node
     {
         private readonly Queue<T> _pool;
-        private readonly List<T> _activeObjects; // Liste pour suivre les objets actifs
+        private readonly HashSet<T> _activeObjects; // Utilisation d'un HashSet pour éviter les doublons
         private readonly Func<T> _factory;
         private readonly int _initialSize;
-        //private readonly Node _parent; // Stocke le node parent
+        //private readonly Game _game; // Stocke l'instance de Game
 
-        public ObjectPool(Node parent, Func<T> factory, int initialSize)
+        public ObjectPool(Func<T> factory, int initialSize)
         {
             _pool = new Queue<T>();
-            _activeObjects = new List<T>();
+            _activeObjects = new HashSet<T>(); // HashSet pour une recherche rapide et éviter les doublons
             _factory = factory;
             _initialSize = initialSize;
-            //_parent = parent; // Sauvegarde l'instance de Game
+            //_game = game; // Sauvegarde l'instance de Game
 
             // Initialisation du pool
             for (int i = 0; i < initialSize; i++)
@@ -39,18 +41,28 @@ namespace Mugen.Core
             {
                 // Utiliser l'instance de Game stockée pour créer un nouvel objet
                 obj = _factory();
-
-                //Misc.Log($"New object created: {obj.GetType().Name}");
             }
 
             obj._isActive = true;
-            _activeObjects.Add(obj); // Ajouter à la liste des objets actifs
+            _activeObjects.Add(obj); // Ajouter à l'ensemble des objets actifs
             return obj;
         }
 
         // Retourner un objet au pool
         public void Return(T obj, Node parent)
         {
+            if (obj == null || !_activeObjects.Contains(obj))
+            {
+                // Ignorer si l'objet est null ou n'est pas dans les objets actifs
+                return;
+            }
+
+            // Vérifier si l'objet est déjà dans le pool pour éviter les doublons
+            if (_pool.Contains(obj))
+            {
+                return;
+            }
+
             obj.Init();
             obj._isActive = false;
 
@@ -59,16 +71,14 @@ namespace Mugen.Core
 
             obj._parent = null; // Réinitialiser le parent
 
-            _activeObjects.Remove(obj); // Retirer de la liste des objets actifs
-            _pool.Enqueue(obj);
-
-            //Misc.Log($"Object returned to pool: {obj.GetType().Name}");
+            _activeObjects.Remove(obj); // Retirer de l'ensemble des objets actifs
+            _pool.Enqueue(obj); // Ajouter à la file du pool
         }
 
         // Obtenir tous les objets actifs
         public IEnumerable<T> GetActiveObjects()
         {
-            return _activeObjects; // Retourner la liste des objets actifs
+            return _activeObjects; // Retourner l'ensemble des objets actifs
         }
 
         // Obtient tous les objets
@@ -77,4 +87,84 @@ namespace Mugen.Core
             return _pool.Concat(_activeObjects); // Retourner la liste complète
         }
     }
+
+    //public class ObjectPool<T> where T : Node
+    //{
+    //    private readonly Queue<T> _pool;
+    //    private readonly List<T> _activeObjects; // Liste pour suivre les objets actifs
+    //    private readonly Func<T> _factory;
+    //    private readonly int _initialSize;
+    //    //private readonly Node _parent; // Stocke le node parent
+
+    //    public ObjectPool(Node parent, Func<T> factory, int initialSize)
+    //    {
+    //        _pool = new Queue<T>();
+    //        _activeObjects = new List<T>();
+    //        _factory = factory;
+    //        _initialSize = initialSize;
+    //        //_parent = parent; // Sauvegarde l'instance de Game
+
+    //        // Initialisation du pool
+    //        for (int i = 0; i < initialSize; i++)
+    //        {
+    //            T obj = factory();
+    //            obj._isActive = false; // Marquer comme inactif
+    //            obj._parent = null; // Réinitialiser le parent
+    //            _pool.Enqueue(obj);
+    //        }
+    //    }
+
+    //    // Obtenir un objet du pool
+    //    public T Get()
+    //    {
+    //        T obj;
+    //        if (_pool.Count > 0)
+    //        {
+    //            obj = _pool.Dequeue();
+    //        }
+    //        else
+    //        {
+    //            // Utiliser l'instance de Game stockée pour créer un nouvel objet
+    //            obj = _factory();
+
+    //            //Misc.Log($"New object created: {obj.GetType().Name}");
+    //        }
+
+    //        obj._isActive = true;
+    //        _activeObjects.Add(obj); // Ajouter à la liste des objets actifs
+    //        return obj;
+    //    }
+
+    //    // Retourner un objet au pool
+    //    public void Return(T obj, Node parent)
+    //    {
+    //        obj.Init();
+    //        obj._isActive = false;
+
+    //        if (parent != null)
+    //            parent.RemoveChild(obj); // Retirer de son parent
+
+    //        obj._parent = null; // Réinitialiser le parent
+
+    //        _activeObjects.Remove(obj); // Retirer de la liste des objets actifs
+    //        _pool.Enqueue(obj);
+
+    //        //Misc.Log($"Object returned to pool: {obj.GetType().Name}");
+    //    }
+
+    //    // Obtenir tous les objets actifs
+    //    public IEnumerable<T> GetActiveObjects()
+    //    {
+    //        return _activeObjects; // Retourner la liste des objets actifs
+    //    }
+
+    //    // Obtient tous les objets
+    //    public IEnumerable<T> GetAllObjects()
+    //    {
+    //        return _pool.Concat(_activeObjects); // Retourner la liste complète
+    //    }
+    //}
+
+
+
 }
