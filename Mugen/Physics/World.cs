@@ -139,12 +139,26 @@ namespace Mugen.Physics
         public Point2 BottomCenter => new Point2(X + Width/2, Y + Height);
         public Point2 BottomLeft => new Point2(X, Y + Height);
         public Point2 LeftMiddle => new Point2(X, Y + Height/2);
+        public RectangleF(Vector2 position, Vector2 size)
+        {
+            X = position.X;
+            Y = position.Y;
+            Width = size.X;
+            Height = size.Y;
+        }
         public RectangleF(float x, float y, float width, float height)
         {
             X = x;
             Y = y;
             Width = width;
             Height = height;
+        }
+        public RectangleF(Vector2 size)
+        {
+            X = 0;
+            Y = 0;
+            Width = size.X;
+            Height = size.Y;
         }
         public RectangleF(float width, float height)
         {
@@ -153,12 +167,33 @@ namespace Mugen.Physics
             Width = width;
             Height = height;
         }
+        public RectangleF(Point position, Size2 size)
+        {
+            X = position.X;
+            Y = position.Y;
+            Width = size.Width;
+            Height = size.Height;
+        }
+        public RectangleF(Point position, Point size)
+        {
+            X = position.X;
+            Y = position.Y;
+            Width = size.X;
+            Height = size.Y;
+        }
         public RectangleF(Point2 position, Size2 size)
         {
             X = position.X;
             Y = position.Y;
             Width = size.Width;
             Height = size.Height;
+        }
+        public RectangleF(Point2 position, Point2 size)
+        {
+            X = position.X;
+            Y = position.Y;
+            Width = size.X;
+            Height = size.Y;
         }
         public static Vector2 GetSize(RectangleF rectangle)
         {

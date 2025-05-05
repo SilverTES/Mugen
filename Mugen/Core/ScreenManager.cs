@@ -11,20 +11,29 @@ namespace Mugen.Core
         public static Rectangle PreviousScissorRect;
         public static RasterizerState ScissorRasterizerState = new RasterizerState { ScissorTestEnable = true };
 
-        public static void BeginScissor(SpriteBatch batch, Rectangle rect, int indexLayer, LayerParameter layerParam)
+        public static void BeginScissor(SpriteBatch batch, Rectangle rect, int indexLayer, LayerParameter? layerParam = null)
         {
             // Sauvegarder l'état actuel
             PreviousScissorRect = batch.GraphicsDevice.ScissorRectangle;
             batch.End();
-            ScreenManager.BeginDraw(indexLayer, layerParam.sortMode, layerParam.blendState, layerParam.samplerState, layerParam.depthStencilState, ScissorRasterizerState, layerParam.effect, layerParam.transformMatrix);
             batch.GraphicsDevice.ScissorRectangle = rect;
+
+            if (layerParam == null)
+                layerParam = GetLayerParameter(indexLayer);
+
+            BeginDraw(indexLayer, layerParam!.sortMode, layerParam.blendState, layerParam.samplerState, layerParam.depthStencilState, ScissorRasterizerState, layerParam.effect, layerParam.transformMatrix);
+
         }
-        public static void EndScissor(SpriteBatch batch)
+        public static void EndScissor(SpriteBatch batch, int indexLayer, LayerParameter? layerParam = null)
         {
             batch.End();
             // Restaurer l'état précédent
             batch.GraphicsDevice.ScissorRectangle = PreviousScissorRect;
-            batch.Begin();
+
+            if (layerParam == null)
+                layerParam = GetLayerParameter(indexLayer);
+
+            BeginDraw(indexLayer, layerParam!.sortMode, layerParam.blendState, layerParam.samplerState, layerParam.depthStencilState, ScissorRasterizerState, layerParam.effect, layerParam.transformMatrix);
         }
 
         public class LayerParameter
