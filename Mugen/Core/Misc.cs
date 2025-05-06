@@ -246,12 +246,13 @@ namespace Mugen.Core
             Value = initValue;
             _animate.Add("easing");
         }
-        public float SetValue(float newValue, float duration = 32f)
+        public float SetValue(float newValue, Func<float, float, float, float, float> easing, float duration = 32f)
         {
             float prevValue = Value;
             Value = newValue;
+            
 
-            _animate.SetMotion("easing", Easing.QuadraticEaseOut, new Tweening(prevValue, Value, duration));
+            _animate.SetMotion("easing", easing, new Tweening(prevValue, Value, duration));
             _animate.Start("easing");
 
             return Value;
