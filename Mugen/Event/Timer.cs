@@ -176,12 +176,10 @@ namespace Mugen.Event
             int idTimer = Convert.ToInt32(IdTimer);
             _offTimer[idTimer] += action;
         }
-        public void Set(T IdTimer, float tic, bool repeat = false)
+        public void Set(T IdTimer, float tic)
         {
             int idTimer = Convert.ToInt32(IdTimer);
-
             _tics[idTimer] = tic;
-            _repeat[idTimer] = repeat;
         }
         public void SetTimeFactor(T IdTimer, float timeFactor = 1f)
         {
@@ -193,11 +191,12 @@ namespace Mugen.Event
             int idTimer = Convert.ToInt32(IdTimer);
             return _timers[idTimer];
         }
-        public void Start(T IdTimer)
+        public void Start(T IdTimer, bool repeat = true)
         {
             int idTimer = Convert.ToInt32(IdTimer);
             _active[idTimer] = true;
             _timers[idTimer] = 1f;
+            _repeat[idTimer] = repeat;
         }
         public void Pause(T IdTimer)
         {
@@ -215,6 +214,7 @@ namespace Mugen.Event
             _active[idTimer] = false;
             _timers[idTimer] = 1f;
             _offTimer[idTimer]?.Invoke();
+            _repeat[idTimer] = false;
         }
         public void SetOn(T IdTimer)
         {
@@ -228,6 +228,7 @@ namespace Mugen.Event
             _on[idTimer] = false;
             _timers[idTimer] = 1f;
             _offTimer[idTimer]?.Invoke();
+            _repeat[idTimer] = false;
         }
         public bool On(T IdTimer)
         {
