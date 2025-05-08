@@ -987,7 +987,7 @@ namespace Mugen.GFX
         {
             Grid(batch, position.X, position.Y, gridW, gridH, cellW, cellH, color, thickness);
         }
-        public static void Mosaic(this SpriteBatch batch, Rectangle rectView, float x, float y, int repX, int repY, Texture2D bitmap, Color color)
+        public static void Mosaic(this SpriteBatch batch, RectangleF rectView, float x, float y, int repX, int repY, Texture2D bitmap, Color color)
         {
             float tileW = bitmap.Width;
             float tileH = bitmap.Height;
@@ -1012,7 +1012,7 @@ namespace Mugen.GFX
                 }
             }
         }
-        public static void Mosaic(this SpriteBatch batch, Rectangle rectView, float x, float y, int repX, int repY, Texture2D bitmap, float tileX, float tileY, float tileW, float tileH, Color color)
+        public static void Mosaic(this SpriteBatch batch, RectangleF rectView, float x, float y, int repX, int repY, Texture2D bitmap, float tileX, float tileY, float tileW, float tileH, Color color)
         {
 
             for (int i = 0; i < repX; ++i)
@@ -1035,7 +1035,7 @@ namespace Mugen.GFX
                 }
             }
         }
-        public static void Mosaic(this SpriteBatch batch, Rectangle rectView, float x, float y, int repX, int repY, Texture2D bitmap, Rectangle rect, Color color)
+        public static void Mosaic(this SpriteBatch batch, RectangleF rectView, float x, float y, int repX, int repY, Texture2D bitmap, Rectangle rect, Color color)
         {
 
             for (int i = 0; i < repX; ++i)

@@ -350,6 +350,14 @@ namespace Mugen.Physics
         {
             return Add(a, b);
         }
+        public static RectangleF operator *(RectangleF a, Vector2 multiply)
+        {
+            return new RectangleF(a.X, a.Y , a.Width * multiply.X, a.Height * multiply.Y);
+        }
+        public static RectangleF operator *(RectangleF a, float multiply)
+        {
+            return new RectangleF(a.X, a.Y, a.Width * multiply, a.Height * multiply);
+        }
         public static RectangleF operator +(RectangleF a, Vector2 offset)
         {
             return new RectangleF(a.X + offset.X, a.Y + offset.Y, a.Width, a.Height);
