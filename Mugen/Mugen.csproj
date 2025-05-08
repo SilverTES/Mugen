@@ -1,4 +1,4 @@
-<Project Sdk="Microsoft.NET.Sdk">
+﻿<Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
     <TargetFramework>net8.0</TargetFramework>
@@ -10,7 +10,9 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <Folder Include="Script\" />
+    <Compile Remove="Script\**" />
+    <EmbeddedResource Remove="Script\**" />
+    <None Remove="Script\**" />
   </ItemGroup>
 
   <ItemGroup>

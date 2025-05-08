@@ -125,6 +125,21 @@ namespace Mugen.Core
 
             return _stackScreen.Peek();
         }
+        public static void Init(List<int> layersOrder)
+        {
+            //_windowManager = windowManager;
+            _spriteBatch = WindowManager._batch;
+
+            //_layers = new RenderTarget2D[nbLayers];
+            _layersOrder = layersOrder;
+
+            for (int i = 0; i < layersOrder.Count; i++)
+            {
+                _layers.Add(new(WindowManager.GDManager!.GraphicsDevice, WindowManager.GetScreenSize().X, WindowManager.GetScreenSize().Y));
+                _layerParameter.Add(new LayerParameter());
+            }
+
+        }
         public static void Init(Node initialScreen, List<int> layersOrder)
         {
             //_windowManager = windowManager;
@@ -197,7 +212,8 @@ namespace Mugen.Core
                     _curScreen._naviGate.SetNaviGate(true);
             }
 
-            _showScreen.Update(gameTime);
+            if (_showScreen != null)
+                _showScreen.Update(gameTime);
 
             if (null != _transition)
                 _transition.Update(gameTime);
@@ -239,7 +255,8 @@ namespace Mugen.Core
         }
         public static void DrawLayer(int indexLayer, GameTime gameTime)
         {
-            _showScreen.Draw(_spriteBatch!, gameTime, indexLayer);
+            if (_showScreen != null)
+                _showScreen.Draw(_spriteBatch!, gameTime, indexLayer);
 
             if (null != _transition)
                 _transition.Draw(_spriteBatch!, gameTime, indexLayer);
