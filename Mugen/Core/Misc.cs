@@ -249,13 +249,13 @@ namespace Mugen.Core
         public float SetValue(float newValue, Func<float, float, float, float, float> easing, float duration = 32f)
         {
             float prevValue = Value;
-            Value = newValue;
+            //Value = newValue;
             
 
-            _animate.SetMotion("easing", easing, new Tweening(prevValue, Value, duration));
+            _animate.SetMotion("easing", easing, new Tweening(prevValue, newValue, duration));
             _animate.Start("easing");
 
-            return Value;
+            return newValue;
         }
 
         public void Update(GameTime gameTime)
@@ -263,6 +263,37 @@ namespace Mugen.Core
             if (_animate.IsPlay())
             {
                 Value = (int)_animate.Value();
+            }
+
+            _animate.NextFrame();
+        }
+    }
+    public class EasingValue2D
+    {
+        public Vector2 Value { get; set; }
+        AnimateVec2 _animate = new();
+        public EasingValue2D(Vector2 initValue)
+        {
+            Value = initValue;
+            _animate.Add("easing");
+        }
+        public Vector2 SetValue(Vector2 newValue, Func<float, float, float, float, float> easing, float duration = 32f)
+        {
+            Vector2 prevValue = Value;
+            //Value = newValue;
+
+
+            _animate.SetMotionVec2("easing", easing, new TweeningVec2(prevValue, newValue, duration));
+            _animate.Start("easing");
+
+            return newValue;
+        }
+
+        public void Update(GameTime gameTime)
+        {
+            if (_animate.IsPlay())
+            {
+                Value = _animate.Value();
             }
 
             _animate.NextFrame();
