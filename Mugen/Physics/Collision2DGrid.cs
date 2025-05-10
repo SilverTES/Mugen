@@ -15,41 +15,22 @@ namespace Mugen.Physics
         int _gridH;
         int _cellSize;
 
-        List<List<Collide.Cell>> _collideCells = new List<List<Collide.Cell>>();  // Map2D of Cell
+        Grid2D<Collide.Cell> _collideCells;  // Map2D of Cell
         public List<Collide.Zone> _collideZones = new List<Collide.Zone>();   // List of Collide::zone in one Cell : Always Refreshed
 
         public Collision2DGrid(int gridW, int gridH, int cellSize)
         {
             _cellSize = cellSize;
-
             _gridW = gridW;
             _gridH = gridH;
 
-            //_vec2dCell.resize(_gridW);
-            ListExtra.Resize(_collideCells, _gridW);
+            _collideCells = new Grid2D<Collide.Cell>(gridW, gridH);
+            _collideCells.Fill(new Collide.Cell());
 
-            for (int x = 0; x < _gridW; ++x)
-            {
-                //_vec2dCell[x].resize(_gridH);
-
-                //_vec2dCell.Add(new List<Collide.Cell>());
-                _collideCells[x] = new List<Collide.Cell>();
-
-                ListExtra.Resize(_collideCells[x], _gridH);
-                for (int y = 0; y < _gridH; ++y)
-                {
-                    _collideCells[x][y] = new Collide.Cell();
-                    //_vec2dCell[x].Add (new Collide.Cell());
-                }
-            }
         }
         public Collide.Cell? GetCell(int x, int y)
         {
-            if (x < 0 || x >= _gridW ||
-                y < 0 || y >= _gridH)
-                return null;
-
-            return _collideCells[x][y];
+            return _collideCells.Get(x, y);
         }
         public void ClearAll()
         {
