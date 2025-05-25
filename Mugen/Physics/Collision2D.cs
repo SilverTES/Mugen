@@ -487,37 +487,66 @@ namespace Mugen.Physics
             return false;
         }
 
-
-        public static Vector2 LineLineIntersection(Vector2 A, Vector2 B, Vector2 C, Vector2 D)
+        /// <summary>
+        /// Calcule le point d'intersection entre deux lignes infinies définies par deux points chacune.
+        /// </summary>
+        /// <param name="p1">Premier point de la première ligne.</param>
+        /// <param name="p2">Deuxième point de la première ligne.</param>
+        /// <param name="p3">Premier point de la deuxième ligne.</param>
+        /// <param name="p4">Deuxième point de la deuxième ligne.</param>
+        /// <param name="intersectionPoint">Le point d'intersection si les lignes se coupent.</param>
+        /// <returns>True si les lignes se coupent, False si elles sont parallèles ou colinéaires.</returns>
+        public static bool LineLineIntersection(Vector2 p1, Vector2 p2, Vector2 p3, Vector2 p4, out Vector2 intersectionPoint)
         {
-            // Line AB represented as a1x + b1y = c1  
-            float a1 = B.Y - A.Y;
-            float b1 = A.X - B.X;
-            float c1 = a1 * (A.X) + b1 * (A.Y);
+            intersectionPoint = Vector2.Zero;
 
-            // Line CD represented as a2x + b2y = c2  
-            float a2 = D.Y - C.Y;
-            float b2 = C.X - D.X;
-            float c2 = a2 * (C.X) + b2 * (C.X);
+            // Calcul des vecteurs directeurs des lignes
+            Vector2 s1 = p2 - p1;
+            Vector2 s2 = p4 - p3;
 
-            float determinant = a1 * b2 - a2 * b1;
+            // Calcul du déterminant (produit en croix pour le 2D)
+            float determinant = (-s2.X * s1.Y) + (s1.X * s2.Y);
 
-            if (determinant == 0)
+            // Si le déterminant est proche de zéro, les lignes sont parallèles ou colinéaires
+            if (Math.Abs(determinant) < float.Epsilon)
             {
-                // The lines are parallel. This is simplified  
-                // by returning a pair of FLT_MAX  
-                return new Vector2(float.MaxValue, float.MaxValue);
+                // Vérifier si elles sont colinéaires (se chevauchent)
+                // Cela se produit si p3 est sur la ligne p1-p2
+                // On peut le vérifier en testant si l'aire du parallélogramme formé par (p2-p1) et (p3-p1) est nulle
+                float crossProductP1P2P3 = (p3.Y - p1.Y) * (p2.X - p1.X) - (p3.X - p1.X) * (p2.Y - p1.Y);
+                if (Math.Abs(crossProductP1P2P3) < float.Epsilon)
+                {
+                    // Lignes colinéaires. Dans le cas de lignes *infinies*,
+                    // elles se "coupent" sur toute leur longueur.
+                    // Selon l'interprétation, vous pourriez vouloir retourner True (elles sont la même ligne)
+                    // ou False (pas un point d'intersection *unique*).
+                    // Pour cet exemple, nous retournons False pour un point d'intersection unique.
+                    return false;
+                }
+                return false; // Lignes parallèles
             }
-            else
-            {
-                float x = (b2 * c1 - b1 * c2) / determinant;
-                float y = (a1 * c2 - a2 * c1) / determinant;
-                return new Vector2(x, y);
-            }
+
+            // Calcul des paramètres 't' et 'u' pour les équations paramétriques des lignes
+            // Ligne 1: p1 + t * s1
+            // Ligne 2: p3 + u * s2
+
+            float t = (s2.X * (p1.Y - p3.Y) - s2.Y * (p1.X - p3.X)) / determinant;
+            //float u = (s1.X * (p1.Y - p3.Y) - s1.Y * (p1.X - p3.X)) / determinant; // Non nécessaire pour le point d'intersection
+
+            // Calcul du point d'intersection en utilisant 't'
+            intersectionPoint.X = p1.X + (t * s1.X);
+            intersectionPoint.Y = p1.Y + (t * s1.Y);
+
+            return true;
         }
-        public static Vector2 LineLineIntersection(Line line1, Line line2)
+        public static bool LineLineIntersection(Line line1, Line line2, out Vector2 intersectionPoint)
         {
-            return LineLineIntersection(line1.A, line1.B, line2.A, line2.B);
+            return LineLineIntersection(line1.A, line1.B, line2.A, line2.B, out intersectionPoint);
+        }
+        public static Vector2 LineLineIntersection(Line line1, Line line2, out bool isContact)
+        {
+            isContact = LineLineIntersection(line1.A, line1.B, line2.A, line2.B, out Vector2 intersectionPoint);
+            return intersectionPoint;
         }
         public static Vector2 SegmentSegmentIntersection(Line lineA, Line lineB, out bool isContact)
         {
