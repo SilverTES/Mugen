@@ -6,19 +6,20 @@ namespace Mugen.Core
     public static class ScreenManager
     {
         public static Rectangle PreviousScissorRect;
-        public static RasterizerState ScissorRasterizerState = new RasterizerState { ScissorTestEnable = true };
+        public static RasterizerState ScissorRasterizerStateOn = new RasterizerState { ScissorTestEnable = true};
+        public static RasterizerState ScissorRasterizerStateOff = new RasterizerState { ScissorTestEnable = false};
 
         public static void BeginScissor(SpriteBatch batch, Rectangle rect, int indexLayer, LayerParameter? layerParam = null)
         {
             // Sauvegarder l'état actuel
             PreviousScissorRect = batch.GraphicsDevice.ScissorRectangle;
             batch.End();
-            batch.GraphicsDevice.ScissorRectangle = rect;
 
             if (layerParam == null)
                 layerParam = GetLayerParameter(indexLayer);
 
-            BeginDraw(indexLayer, layerParam!.sortMode, layerParam.blendState, layerParam.samplerState, layerParam.depthStencilState, ScissorRasterizerState, layerParam.effect, layerParam.transformMatrix);
+            BeginDraw(indexLayer, layerParam!.sortMode, layerParam.blendState, layerParam.samplerState, layerParam.depthStencilState, ScissorRasterizerStateOn, layerParam.effect, layerParam.transformMatrix);
+            batch.GraphicsDevice.ScissorRectangle = rect;
 
         }
         public static void EndScissor(SpriteBatch batch, int indexLayer, LayerParameter? layerParam = null)
@@ -30,7 +31,7 @@ namespace Mugen.Core
             if (layerParam == null)
                 layerParam = GetLayerParameter(indexLayer);
 
-            BeginDraw(indexLayer, layerParam!.sortMode, layerParam.blendState, layerParam.samplerState, layerParam.depthStencilState, ScissorRasterizerState, layerParam.effect, layerParam.transformMatrix);
+            BeginDraw(indexLayer, layerParam!.sortMode, layerParam.blendState, layerParam.samplerState, layerParam.depthStencilState, ScissorRasterizerStateOff, layerParam.effect, layerParam.transformMatrix);
         }
 
         public class LayerParameter
