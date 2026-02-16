@@ -307,7 +307,11 @@ namespace Mugen.Core
         //{
         //    return (T)_game;
         //}
-
+        public Node ToggleVisible()
+        {
+            _isVisible = !_isVisible;
+            return this; 
+        }
         // --- Clonage
         public Node GetMaster(Node node)
         {
