@@ -32,7 +32,7 @@ namespace Mugen.Core
         public bool _onFocus = false; // trigger : is focused navi
         public bool _isFocus = false; // status : is focused navi
     }
-    public class State<T> where T : Enum
+    public class State<T> where T : Enum, new()
     {
         // State Attributes
         public T CurState => _state;
@@ -42,6 +42,12 @@ namespace Mugen.Core
         private Action[] _onStates = [];
         private Action[] _offStates = [];
 
+        public State() 
+        {
+            // Grâce à la contrainte new(), on peut instancier T
+            _state = new T();
+            _prevState = new T();
+        }
         public State(T startState) 
         {
             _state = startState;
