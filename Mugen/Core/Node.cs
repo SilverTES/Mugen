@@ -42,6 +42,8 @@ namespace Mugen.Core
         private Action[] _onStates = [];
         private Action[] _offStates = [];
 
+        public Action? OnChangeState = null;
+        public Action? OnSetState = null;
         public State() 
         {
             // Grâce à la contrainte new(), on peut instancier T
@@ -96,6 +98,8 @@ namespace Mugen.Core
             _state = state;
             // Enter new state
             On(_state);
+
+            OnSetState?.Invoke();
         }
         /// <summary>
         /// Change state only if different than current state
@@ -108,6 +112,8 @@ namespace Mugen.Core
             {
                 Set(State);
             }
+
+            OnChangeState?.Invoke();
         }
         public T GetState()
         {
