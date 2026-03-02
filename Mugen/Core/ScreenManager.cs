@@ -332,7 +332,7 @@ namespace Mugen.Core
             _isSwap = false;
             _onSwap = false;
 
-            transition.Start();
+            transition.StartScreenTransition();
         }
     }
 }

@@ -1475,7 +1475,7 @@ namespace Mugen.Core
         //{
         //    return _curFrame == frame;
         //}
-        public virtual void Start()
+        public virtual void StartScreenTransition()
         {
 
         }
