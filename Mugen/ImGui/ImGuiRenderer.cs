@@ -139,11 +139,11 @@ namespace Mugen.ImGui
         /// <summary>
         /// Sets up ImGui for a new frame, should be called at frame start
         /// </summary>
-        public virtual void BeforeLayout(float mouseX, float mouseY, GameTime gameTime, float displaySizeW, float displaySizeH, float displayScaleX = 1f, float displayScaleY = 1f)
+        public virtual void BeforeLayout(float mouseX, float mouseY, GameTime gameTime, Viewport viewPort, float displayScaleX = 1f, float displayScaleY = 1f)
         {
             ImGuiNET.ImGui.GetIO().DeltaTime = (float)gameTime.ElapsedGameTime.TotalSeconds;
 
-            UpdateInput(mouseX, mouseY, displaySizeW, displaySizeH, displayScaleX, displayScaleY);
+            UpdateInput(mouseX, mouseY, viewPort.Width, viewPort.Height, displayScaleX, displayScaleY);
 
             ImGuiNET.ImGui.NewFrame();
         }
