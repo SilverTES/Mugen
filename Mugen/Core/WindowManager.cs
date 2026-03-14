@@ -67,7 +67,7 @@ namespace Mugen.Core
         //{
         //    _batch = spriteBatch;
         //}
-
+        public static float GetScale() { return Scale; }
         public static Point GetScreenSize()
         {
             return _screenSize;

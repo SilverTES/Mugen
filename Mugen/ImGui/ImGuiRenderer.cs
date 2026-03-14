@@ -151,11 +151,11 @@ namespace Mugen.ImGui
         /// <summary>
         /// Asks ImGui for the generated geometry data and sends it to the graphics pipeline, should be called after the UI is drawn using ImGui.** calls
         /// </summary>
-        public virtual void AfterLayout()
+        public virtual void AfterLayout(Viewport viewPort)
         {
             ImGuiNET.ImGui.Render();
 
-            unsafe { RenderDrawData(ImGuiNET.ImGui.GetDrawData()); }
+            unsafe { RenderDrawData(ImGuiNET.ImGui.GetDrawData(), viewPort); }
         }
 
         #endregion ImGuiRenderer
@@ -314,7 +314,7 @@ namespace Mugen.ImGui
         /// <summary>
         /// Gets the geometry as set up by ImGui and sends it to the graphics device
         /// </summary>
-        private void RenderDrawData(ImDrawDataPtr drawData)
+        private void RenderDrawData(ImDrawDataPtr drawData, Viewport viewPort)
         {
             // Setup render state: alpha-blending enabled, no face culling, no depth testing, scissor enabled, vertex/texcoord/color pointers
             var lastViewport = _graphicsDevice.Viewport;
@@ -329,7 +329,7 @@ namespace Mugen.ImGui
             drawData.ScaleClipRects(ImGuiNET.ImGui.GetIO().DisplayFramebufferScale);
 
             // Setup projection
-            _graphicsDevice.Viewport = new Viewport(0, 0, _graphicsDevice.PresentationParameters.BackBufferWidth, _graphicsDevice.PresentationParameters.BackBufferHeight);
+            _graphicsDevice.Viewport = viewPort;
 
             UpdateBuffers(drawData);
 
