@@ -45,9 +45,9 @@ namespace Mugen.Core
             public Matrix? transformMatrix = null;
         }
 
-        public static List<RenderTarget2D> _layers = [];
-        public static List<LayerParameter> _layerParameter = [];
-        public static int NbLayers => _layers.Count;
+        public static List<RenderTarget2D> Layers = [];
+        public static List<LayerParameter> LayerParameters = [];
+        public static int NbLayers => Layers.Count;
         //private static WindowManager? _windowManager;
         private static SpriteBatch? _spriteBatch;
 
@@ -69,10 +69,10 @@ namespace Mugen.Core
 
         public static RenderTarget2D? GetLayer(int indexLayer)
         {
-            if (indexLayer < 0 || indexLayer > _layers.Count)
+            if (indexLayer < 0 || indexLayer > Layers.Count)
                 return null;
 
-            return _layers[indexLayer];
+            return Layers[indexLayer];
 
         }
         public static void SetLayerParameter(
@@ -85,16 +85,16 @@ namespace Mugen.Core
             Effect? effect = null, 
             Matrix? transformMatrix = null)
         {
-            if (indexLayer < 0 || indexLayer > _layers.Count)
+            if (indexLayer < 0 || indexLayer > Layers.Count)
                 return;
 
-            _layerParameter[indexLayer].sortMode = sortMode;
-            _layerParameter[indexLayer].blendState = blendState;
-            _layerParameter[indexLayer].samplerState = samplerState;
-            _layerParameter[indexLayer].depthStencilState = depthStencilState;
-            _layerParameter[indexLayer].rasterizerState = rasterizerState;
-            _layerParameter[indexLayer].effect = effect;
-            _layerParameter[indexLayer].transformMatrix = transformMatrix;
+            LayerParameters[indexLayer].sortMode = sortMode;
+            LayerParameters[indexLayer].blendState = blendState;
+            LayerParameters[indexLayer].samplerState = samplerState;
+            LayerParameters[indexLayer].depthStencilState = depthStencilState;
+            LayerParameters[indexLayer].rasterizerState = rasterizerState;
+            LayerParameters[indexLayer].effect = effect;
+            LayerParameters[indexLayer].transformMatrix = transformMatrix;
         }
         public static void SetLayerParameter(int indexLayer, LayerParameter layerParameter)
         {
@@ -102,10 +102,10 @@ namespace Mugen.Core
         }
         public static LayerParameter? GetLayerParameter(int indexLayer)
         {
-            if (indexLayer < 0 || indexLayer > _layers.Count)
+            if (indexLayer < 0 || indexLayer > Layers.Count)
                 return null;
 
-            return _layerParameter[indexLayer];
+            return LayerParameters[indexLayer];
         }
         public static Node ToScreen(Node screen)
         {
@@ -136,8 +136,8 @@ namespace Mugen.Core
 
             for (int i = 0; i < layersOrder.Count; i++)
             {
-                _layers.Add(new(WindowManager.GDManager!.GraphicsDevice, WindowManager.GetScreenSize().X, WindowManager.GetScreenSize().Y));
-                _layerParameter.Add(new LayerParameter());
+                Layers.Add(new(WindowManager.GDManager!.GraphicsDevice, WindowManager.GetScreenSize().X, WindowManager.GetScreenSize().Y));
+                LayerParameters.Add(new LayerParameter());
             }
 
         }
@@ -155,8 +155,8 @@ namespace Mugen.Core
 
             for (int i = 0; i < layersOrder.Count; i++)
             {
-                _layers.Add(new(WindowManager.GDManager!.GraphicsDevice, WindowManager.GetScreenSize().X, WindowManager.GetScreenSize().Y));
-                _layerParameter.Add(new LayerParameter());
+                Layers.Add(new(WindowManager.GDManager!.GraphicsDevice, WindowManager.GetScreenSize().X, WindowManager.GetScreenSize().Y));
+                LayerParameters.Add(new LayerParameter());
             }
 
         }
@@ -230,14 +230,14 @@ namespace Mugen.Core
         }
         public static void BeginDraw(int indexLayer = -1, SpriteSortMode sortMode = SpriteSortMode.Deferred, BlendState? blendState = null, SamplerState? samplerState = null, DepthStencilState? depthStencilState = null, RasterizerState? rasterizerState = null, Effect? effect = null, Matrix? transformMatrix = null)
         {
-            if (indexLayer < 0 || indexLayer >= _layers.Count)
+            if (indexLayer < 0 || indexLayer >= Layers.Count)
             {
                 _spriteBatch!.GraphicsDevice.SetRenderTarget(null);
                 _spriteBatch.Begin(sortMode, blendState, samplerState, depthStencilState, rasterizerState, effect, transformMatrix);
             }
             else
             {
-                _spriteBatch!.GraphicsDevice.SetRenderTarget(_layers![indexLayer]);
+                _spriteBatch!.GraphicsDevice.SetRenderTarget(Layers![indexLayer]);
                 _spriteBatch.Begin(sortMode, blendState, samplerState, depthStencilState, rasterizerState, effect, transformMatrix);
             }
         }
@@ -264,17 +264,17 @@ namespace Mugen.Core
         }
         public static void ShowLayer(int indexLayer, Color color)
         {
-            if (indexLayer < 0 || indexLayer >= _layers.Count)
+            if (indexLayer < 0 || indexLayer >= Layers.Count)
                 return;
 
-            _spriteBatch!.Draw(_layers[indexLayer], WindowManager.StrechtingRect(), color);
+            _spriteBatch!.Draw(Layers[indexLayer], WindowManager.StrechtingRect(), color);
         }
         public static void DrawScreen(GameTime gameTime)
         {
             for (int i = 0; i < _layersOrder.Count; i++)
             {
                 int indexLayer = _layersOrder[i];
-                BeginDraw(indexLayer, _layerParameter[indexLayer].sortMode, _layerParameter[indexLayer].blendState, _layerParameter[indexLayer].samplerState, _layerParameter[indexLayer].depthStencilState, _layerParameter[indexLayer].rasterizerState, _layerParameter[indexLayer].effect, _layerParameter[indexLayer].transformMatrix);
+                BeginDraw(indexLayer, LayerParameters[indexLayer].sortMode, LayerParameters[indexLayer].blendState, LayerParameters[indexLayer].samplerState, LayerParameters[indexLayer].depthStencilState, LayerParameters[indexLayer].rasterizerState, LayerParameters[indexLayer].effect, LayerParameters[indexLayer].transformMatrix);
                 DrawLayer(indexLayer, gameTime);
                 EndDraw();
             }
