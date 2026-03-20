@@ -110,10 +110,11 @@ namespace Mugen.Event
 
             private void DispatchMessage(IMessage message)
             {
+                if (message == null) return;
                 Type messageType = message.GetType();
-                if (_subscribers.ContainsKey(messageType))
+                if (_subscribers.TryGetValue(messageType, out List<Action<IMessage>>? value))
                 {
-                    var subscribers = new List<Action<IMessage>>(_subscribers[messageType]);
+                    var subscribers = new List<Action<IMessage>>(value);
                     foreach (var subscriber in subscribers)
                     {
                         subscriber?.Invoke(message);
