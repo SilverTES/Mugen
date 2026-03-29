@@ -87,7 +87,10 @@ namespace Mugen.Core
 
             _offStates[state] += offActionState;
         }
-
+        public void SetState(T state)
+        {
+            _state = state;
+        }
         public void Set(T state)
         {
             //int state = Convert.ToInt32(State);
