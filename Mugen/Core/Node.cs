@@ -35,8 +35,8 @@ namespace Mugen.Core
     public class State<T> where T : Enum, new()
     {
         // State Attributes
-        public T CurState => _state;
-        private T _state;
+        //public T CurState => _state;
+        public T CurState { get; private set; }
         private T _prevState;
 
         private Action[] _onStates = [];
@@ -47,12 +47,12 @@ namespace Mugen.Core
         public State() 
         {
             // Grâce à la contrainte new(), on peut instancier T
-            _state = new T();
+            CurState = new T();
             _prevState = new T();
         }
         public State(T startState) 
         {
-            _state = startState;
+            CurState = startState;
             _prevState = startState;
 
             var nbStates = Enum.GetValues(typeof(T)).Length;
@@ -69,7 +69,7 @@ namespace Mugen.Core
         //}
         public bool Is(T State)
         {
-            return _state.Equals(State);
+            return CurState.Equals(State);
         }
         public void On(T State, Action onActionState)
         {
@@ -89,18 +89,18 @@ namespace Mugen.Core
         }
         public void SetState(T state)
         {
-            _state = state;
+            CurState = state;
         }
         public void Set(T state)
         {
             //int state = Convert.ToInt32(State);
             // Exit previous state
-            Off(_state);
+            Off(CurState);
             // change state to new state , save previous state
-            _prevState = _state;
-            _state = state;
+            _prevState = CurState;
+            CurState = state;
             // Enter new state
-            On(_state);
+            On(CurState);
 
             OnSetState?.Invoke();
         }
@@ -111,7 +111,7 @@ namespace Mugen.Core
         public void Change(T State)
         {
             int state = Convert.ToInt32(State);
-            if (Convert.ToInt32(_state) != state)
+            if (Convert.ToInt32(CurState) != state)
             {
                 Set(State);
             }
@@ -120,7 +120,7 @@ namespace Mugen.Core
         }
         public T GetState()
         {
-            return _state;
+            return CurState;
         }
         public void BackState()
         {
