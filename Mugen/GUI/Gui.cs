@@ -359,6 +359,16 @@ namespace Mugen.GUI
             _padding = padding;
             _direction = direction;
         }
+        public Container AttachTo(Container container)
+        {
+            if (null != container)
+            {
+                container.Nodes.Add(this);
+                Refresh();
+                container.RefreshChildContainers();
+            }
+            return this;
+        }
         public Container Insert(Node node)
         {
             _nodes.Add(node);
