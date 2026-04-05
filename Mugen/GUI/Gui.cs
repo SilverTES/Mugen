@@ -387,6 +387,12 @@ namespace Mugen.GUI
             RefreshChildContainers();
             return this;
         }
+        public Container Clear()
+        {
+            _nodes.Clear();
+            Refresh();
+            return this;
+        }
         private RectangleF GetRect(Position direction)
         {
             // Determine Container Rect Size ! 
