@@ -84,6 +84,8 @@ namespace Mugen.Core
         }
         private void Kill(int index)
         {
+            if (index < 0 || index >= _objects.Count) return;
+
             if (null != _objects[index]) _objects[index]!._isAlive = false;
             _objects[index] = null;
             _freeObjects.Push(index);
