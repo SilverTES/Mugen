@@ -342,22 +342,22 @@ namespace Mugen.GUI
     //}
     public class Container : Node
     {
-        public RectangleF Rect => GetRect(_direction);
+        public RectangleF Rect => GetRect(Direction);
 
-        Position _direction;
+        public Position Direction;
 
         public List<Node> Nodes => _nodes;
         List<Node> _nodes = [];
 
-        Style.Space _margin; // container space
-        Style.Space _padding; // node space
+        public Style.Space Margin; // container space
+        public Style.Space Padding; // node space
 
         public Container(Style.Space margin, Style.Space padding, Position direction = Position.HORIZONTAL)
         {
             _type = UID.Get<Container>();
-            _margin = margin;
-            _padding = padding;
-            _direction = direction;
+            Margin = margin;
+            Padding = padding;
+            Direction = direction;
         }
         public Container AttachTo(Container container)
         {
@@ -403,16 +403,16 @@ namespace Mugen.GUI
 
                 for (int i = 0; i < _nodes.Count; i++)
                 {
-                    width += _padding.Left + _nodes[i]._rect.Width + _padding.Right;
+                    width += Padding.Left + _nodes[i]._rect.Width + Padding.Right;
 
-                    float testHeight = _padding.Top + _nodes[i]._rect.Height + _padding.Bottom;
+                    float testHeight = Padding.Top + _nodes[i]._rect.Height + Padding.Bottom;
 
                     if (height < testHeight)
                         height = testHeight;
                 }
 
-                _rect.Width = _margin.Left + width + _margin.Right;
-                _rect.Height = _margin.Top + height + _margin.Bottom;
+                _rect.Width = Margin.Left + width + Margin.Right;
+                _rect.Height = Margin.Top + height + Margin.Bottom;
             }
             else
             {
@@ -421,16 +421,16 @@ namespace Mugen.GUI
 
                 for (int i = 0; i < _nodes.Count; i++)
                 {
-                    height += _padding.Top + _nodes[i]._rect.Height + _padding.Bottom;
+                    height += Padding.Top + _nodes[i]._rect.Height + Padding.Bottom;
 
-                    float testWidth = _padding.Left + _nodes[i]._rect.Width + _padding.Right;
+                    float testWidth = Padding.Left + _nodes[i]._rect.Width + Padding.Right;
 
                     if (width < testWidth)
                         width = testWidth;
                 }
 
-                _rect.Width = _margin.Left + width + _margin.Right;
-                _rect.Height = _margin.Top + height + _margin.Bottom;
+                _rect.Width = Margin.Left + width + Margin.Right;
+                _rect.Height = Margin.Top + height + Margin.Bottom;
             }
 
             return _rect;
@@ -444,11 +444,11 @@ namespace Mugen.GUI
                 {
                     if (i == 0)
                     {
-                        _nodes[i]._x = _margin.Left + _padding.Left + _rect.X;
+                        _nodes[i]._x = Margin.Left + Padding.Left + _rect.X;
                     }
                     if (i > 0)
                     {
-                        _nodes[i]._x = _nodes[i - 1]._x + _nodes[i - 1]._rect.Width + _padding.Right + _padding.Left;
+                        _nodes[i]._x = _nodes[i - 1]._x + _nodes[i - 1]._rect.Width + Padding.Right + Padding.Left;
                     }
 
                     _nodes[i]._y = _rect.Y + (_rect.Height - _nodes[i]._rect.Height) / 2;
@@ -462,11 +462,11 @@ namespace Mugen.GUI
                 {
                     if (i == 0)
                     {
-                        _nodes[i]._y = _margin.Top + _padding.Top + _rect.Y;
+                        _nodes[i]._y = Margin.Top + Padding.Top + _rect.Y;
                     }
                     if (i > 0)
                     {
-                        _nodes[i]._y = _nodes[i - 1]._y + _nodes[i - 1]._rect.Height + _padding.Bottom + _padding.Top;
+                        _nodes[i]._y = _nodes[i - 1]._y + _nodes[i - 1]._rect.Height + Padding.Bottom + Padding.Top;
                     }
 
                     _nodes[i]._x = _rect.X + (_rect.Width - _nodes[i]._rect.Width) / 2;
@@ -477,7 +477,7 @@ namespace Mugen.GUI
         }
         public Container Refresh()
         {
-            Refresh(_direction);
+            Refresh(Direction);
             return this;
         }
         public Container Refresh(Position direction)
