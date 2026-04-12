@@ -3,6 +3,7 @@ using Microsoft.Xna.Framework.Input;
 using Microsoft.Xna.Framework;
 using Mugen.Core;
 using System.Xml.Serialization;
+using System.Runtime.CompilerServices;
 
 namespace Mugen.Physics
 {
@@ -337,6 +338,14 @@ namespace Mugen.Physics
         public static RectangleF Extend(RectangleF rect, float step)
         {
             return new RectangleF(rect.X - step, rect.Y - step, rect.Width + step * 2f, rect.Height + step * 2f);
+        }
+        public static RectangleF Extend(RectangleF rect, float stepTop, float stepLeft, float stepRight, float stepBottom)
+        {
+            return new RectangleF(rect.X - stepLeft, rect.Y - stepTop, rect.Width + stepRight * 2f, rect.Height + stepBottom * 2f);
+        }
+        public RectangleF Extend(float top, float left, float right, float bottom)
+        {
+            return Extend(this, top, left, right, bottom);
         }
         public RectangleF Extend(float step)
         {
