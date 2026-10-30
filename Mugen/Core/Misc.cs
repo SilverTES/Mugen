@@ -1,11 +1,11 @@
-﻿using Microsoft.Xna.Framework.Graphics;
-using Microsoft.Xna.Framework;
-using System.Reflection;
-using Newtonsoft.Json.Linq;
-using System.Xml;
-using Mugen.Physics;
-using System.Runtime.CompilerServices;
+﻿using Microsoft.Xna.Framework;
+using Microsoft.Xna.Framework.Graphics;
 using Mugen.Animation;
+using Mugen.Physics;
+using Newtonsoft.Json.Linq;
+using System.Reflection;
+using System.Runtime.CompilerServices;
+using System.Xml;
 
 namespace Mugen.Core
 {
@@ -115,6 +115,73 @@ namespace Mugen.Core
             return _types[indexType];
         }
 
+    }
+
+    public static class FontService
+    {
+        private static byte[]? _fontData;
+        private static Dictionary<int, SpriteFont> _cache = new Dictionary<int, SpriteFont>();
+        private static GraphicsDevice? _device;
+
+        public static void Initialize(GraphicsDevice device, string ttfPath)
+        {
+            _device = device;
+            _fontData = File.ReadAllBytes(ttfPath);
+        }
+        public static void ClearFont()
+        {
+            _cache.Clear();
+        }
+        public static SpriteFont GetFont(int size)
+        {
+            if (!_cache.TryGetValue(size, out SpriteFont? value))
+            {
+                if (_fontData == null) return null!;
+
+                using var ms = new MemoryStream(_fontData);
+                // On ajoute LatinSupplement pour gérer les accents (é, à, ç, etc.)
+                var ranges = new[] { SpriteFontPlus.CharacterRange.BasicLatin, SpriteFontPlus.CharacterRange.Latin1Supplement };
+
+                var bakeResult = SpriteFontPlus.TtfFontBaker.Bake(ms, size, 1024, 1024, ranges);
+                value = bakeResult.CreateSpriteFont(_device);
+                _cache[size] = value;
+            }
+            return value;
+        }
+    }
+
+
+    public class FontEX
+    {
+        private byte[]? _fontData;
+        private Dictionary<int, SpriteFont> _cache = new Dictionary<int, SpriteFont>();
+        private GraphicsDevice? _device;
+
+        public void Initialize(GraphicsDevice device, string ttfPath)
+        {
+            _device = device;
+            _fontData = File.ReadAllBytes(ttfPath);
+        }
+        public void ClearFont()
+        {
+            _cache.Clear();
+        }
+        public SpriteFont GetFont(int size)
+        {
+            if (!_cache.TryGetValue(size, out SpriteFont? value))
+            {
+                if (_fontData == null) return null!;
+
+                using var ms = new MemoryStream(_fontData);
+                // On ajoute LatinSupplement pour gérer les accents (é, à, ç, etc.)
+                var ranges = new[] { SpriteFontPlus.CharacterRange.BasicLatin, SpriteFontPlus.CharacterRange.Latin1Supplement };
+
+                var bakeResult = SpriteFontPlus.TtfFontBaker.Bake(ms, size, 1024, 1024, ranges);
+                value = bakeResult.CreateSpriteFont(_device);
+                _cache[size] = value;
+            }
+            return value;
+        }
     }
 
 
